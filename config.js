@@ -12,20 +12,20 @@ nconf.env();
 
 var defaults = {
     ADMIN_DEBUG: true,
-    ADMIN_APP_NAME: 'Tvrbo Admin',
-    ADMIN_HTML_TITLE: 'Tvrbo Admin',
+    ADMIN_APP_NAME: 'Fura Admin',
+    ADMIN_HTML_TITLE: 'Fura Admin',
 
     ADMIN_AUTH_PERIOD: 1000 * 60 * 60 * 24,
 
     ADMIN_ENFORCE_HTTPS: false,
-    ADMIN_HTTP_PORT: process.env.PORT || 8080,
+    ADMIN_HTTP_PORT: 8080,
     ALLOW_CORS: false,
 
     ADMIN_HTTP_USER: null,
     ADMIN_HTTP_PASSWORD: null,
 
     // DATABASE
-    ADMIN_MONGODB_URI: 'mongodb://localhost:27017/db',
+    ADMIN_MONGODB_URI: 'mongodb://localhost:27017/admin-fura',
 
     // CERTBOT
     ADMIN_ALLOW_CERTBOT: true,

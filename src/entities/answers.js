@@ -1,11 +1,11 @@
 module.exports = function (nga, admin) {
 
-		var posts = admin.getEntity('posts');
+		var answers = admin.getEntity('answers');
 
-		posts.identifier(nga.field('_id'));
+		answers.identifier(nga.field('_id'));
 
-		posts.listView()
-		.title('Blog')
+		answers.listView()
+		.title('Answers')
 		.fields([
 				nga.field('title').isDetailLink(true),
 				nga.field('date', 'date').format('dd/MM/yyyy HH:mm'),
@@ -18,7 +18,7 @@ module.exports = function (nga, admin) {
 		.exportFields([])
 		.listActions(['edit']);
 
-		posts.editionView()
+		answers.editionView()
 				.title('Post')
 				.fields([
 						nga.field('title').validation({required: true}),
@@ -68,8 +68,8 @@ module.exports = function (nga, admin) {
 
 				]);
 
-		posts.creationView()
-				.title('New post')
+		answers.creationView()
+				.title('New answer')
 				.fields([
 						nga.field('title').validation({required: true}),
 						nga.field('thumbnail')
@@ -118,5 +118,5 @@ module.exports = function (nga, admin) {
 
 				]);
 
-		return posts;
+		return answers;
 };

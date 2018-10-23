@@ -1,7 +1,7 @@
 {
-  "name": "TvrboAdmin",
+  "name": "Admin_Fura",
   "version": "1.0.0",
-  "description": "Ng-admin starter template",
+  "description": "Admin questionaris per La Fura dels Baus",
   "main": "server.js",
   "scripts": {
     "start": "make run",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TvrboPro/TvrboAdmin"
+    "url": "https://github.com/joelProj/admin-fura"
   },
   "keywords": [
     "admin",
@@ -23,8 +23,7 @@
     "backend",
     "intranet"
   ],
-  "author": "Jordi Moraleda <jordi@tvrbo.pro>",
-  "license": "ISC",
+  "author": "Joel Moreno <joel.moreno97@gmail.com>",
   "dependencies": {
     "basic-auth": "^1.0.4",
     "bluebird": "^3.4.2",

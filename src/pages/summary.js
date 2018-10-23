@@ -112,7 +112,7 @@ var template =
 					'</div>' +
 			'</div>' +
 
-			// new customers
+			// new questions
 			'<div class="col-lg-4 col-md-6">' +
 					'<div class="panel panel-green">' +
 							'<div class="panel-heading">' +
@@ -121,14 +121,14 @@ var template =
 													'<i class="fa fa-users fa-5x"></i>' +
 											'</div>' +
 											'<div class="col-xs-9 text-right">' +
-													'<div class="huge ng-binding">{{controller.summary.customers}}</div>' +
-													'<div>New customers</div>' +
+													'<div class="huge ng-binding">{{controller.summary.questions}}</div>' +
+													'<div>New questions</div>' +
 											'</div>' +
 									'</div>' +
 							'</div>' +
-							'<a ui-sref="list({entity:\'customers\'})" href="#/customers/list">' +
+							'<a ui-sref="list({entity:\'questions\'})" href="#/questions/list">' +
 									'<div class="panel-footer">' +
-											'<span class="pull-left">See customers</span>' +
+											'<span class="pull-left">See questions</span>' +
 											'<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>' +
 											'<div class="clearfix"></div>' +
 									'</div>' +

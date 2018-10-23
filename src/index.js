@@ -16,19 +16,19 @@ crmApp.config(['NgAdminConfigurationProvider', '$stateProvider', '$translateProv
 		$httpProvider.interceptors.push('httpInterceptor');
 
     var nga = NgAdminConfigurationProvider;
-    var admin = nga.application("Tvrbo Admin")
+    var admin = nga.application("Admin Fura")
       .baseApiUrl("/api/");
 
 
     // ENTITIES
 
-    admin.addEntity(nga.entity('customers'));
-    admin.addEntity(nga.entity('posts'));
+    admin.addEntity(nga.entity('questions'));
+    admin.addEntity(nga.entity('answers'));
     admin.addEntity(nga.entity('products'));
     admin.addEntity(nga.entity('shops'));
 
-    require('./entities/customers')(nga, admin);
-    require('./entities/posts')(nga, admin);
+    require('./entities/questions')(nga, admin);
+    require('./entities/answers')(nga, admin);
     require('./entities/products')(nga, admin);
     require('./entities/shops')(nga, admin);
 

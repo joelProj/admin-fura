@@ -2,12 +2,12 @@ var removeDiacritics = require('../../lib/util.js').removeDiacritics;
 
 module.exports = function (nga, admin) {
 
-		var customers = admin.getEntity('customers');
+		var questions = admin.getEntity('questions');
 
-		customers.identifier(nga.field('_id'));
+		questions.identifier(nga.field('_id'));
 
-		customers.listView()
-		.title('Customers')
+		questions.listView()
+		.title('Questions')
 		.fields([
 				nga.field('name')
 					.map(function(v){ return v || '(No name)'})
@@ -32,8 +32,8 @@ module.exports = function (nga, admin) {
 		.sortDir('ASC')
 		.listActions(['edit'])
 		.batchActions([
-			'<customers-mark-retail selection="selection"></customers-mark-retail>',
-			'<customers-mark-wholesale selection="selection"></customers-mark-wholesale>',
+			'<questions-mark-retail selection="selection"></questions-mark-retail>',
+			'<questions-mark-wholesale selection="selection"></questions-mark-wholesale>',
 			'delete'
 		])
 		.filters([
@@ -80,11 +80,11 @@ module.exports = function (nga, admin) {
 			nga.field('registered', 'date').format('dd/MM/yyyy')
 		]);
 
-		customers.editionView()
-				.title('Customer')
+		questions.editionView()
+				.title('Question')
 				.actions([
-					'<customer-mark-retail customer="entry"></customer-mark-retail>',
-					'<customer-mark-wholesale customer="entry"></customer-mark-wholesale>',
+					'<question-mark-retail question="entry"></question-mark-retail>',
+					'<question-mark-wholesale question="entry"></question-mark-wholesale>',
 					'list'
 				])
 				.fields([
@@ -112,7 +112,7 @@ module.exports = function (nga, admin) {
 						// nga.field('purchases', 'referenced_list')
 						// 		.label('Ventas')
 						// 		.targetEntity(admin.getEntity('purchases'))
-						// 		.targetReferenceField('customer')
+						// 		.targetReferenceField('question')
 						// 		.targetFields([
 						// 			nga.field('reference').label('Localizador').isDetailLink(true),
 						// 			nga.field('date', 'date').label('Fecha').isDetailLink(true).format('dd/MM/yyyy'),
@@ -135,8 +135,8 @@ module.exports = function (nga, admin) {
 						// 		.sortDir('DESC')
 				]);
 
-				customers.creationView()
-						.title('Customer')
+				questions.creationView()
+						.title('Question')
 						.fields([
 								nga.field('name'),
 								nga.field('lastName').label('Last Name'),
@@ -159,5 +159,5 @@ module.exports = function (nga, admin) {
 
 
 
-		return customers;
+		return questions;
 };
