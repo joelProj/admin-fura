@@ -1,0 +1,50 @@
+{
+  "name": "TvrboAdmin",
+  "version": "1.0.0",
+  "description": "Ng-admin starter template",
+  "main": "server.js",
+  "scripts": {
+    "start": "make run",
+    "prepublish": "make snyk-protect"
+  },
+  "engines": {
+    "node": "6.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TvrboPro/TvrboAdmin"
+  },
+  "keywords": [
+    "admin",
+    "angular",
+    "ng-admin",
+    "node",
+    "express",
+    "backend",
+    "intranet"
+  ],
+  "author": "Jordi Moraleda <jordi@tvrbo.pro>",
+  "license": "ISC",
+  "dependencies": {
+    "basic-auth": "^1.0.4",
+    "bluebird": "^3.4.2",
+    "body-parser": "^1.15.1",
+    "cookie-parser": "^1.4.3",
+    "css-loader": "^0.25.0",
+    "express": "^4.13.4",
+    "lodash.throttle": "^4.1.1",
+    "method-override": "^2.3.6",
+    "mongoose": "^4.4.17",
+    "nconf": "^0.8.4",
+    "ng-admin": "1.0.0-alpha2",
+    "snyk": "^1.18.1",
+    "style-loader": "^0.13.1",
+    "validator": "^6.0.0",
+    "webpack": "^1.13.2"
+  },
+  "devDependencies": {
+    "eslint": "^3.5.0",
+    "nodemon": "^1.10.2"
+  },
+  "snyk": true
+}
