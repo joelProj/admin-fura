@@ -279,8 +279,8 @@
 				'<div class="container-fluid">' +
 					'<div class="row">' +
 						'<div class="col-md-12 text-center">' +
-							'<h2>Tvrbo Admin</h2>' +
-							'<p class="text-muted">Welcome to the Tvrbo Admin starter app. <br/>Refer to the sections on the left to manage your data.</p>' +
+							'<h2>Admin Fura</h2>' +
+							'<p class="text-muted">Questionnaire database admin<br/>La Fura dels Baus</p>' +
 						'</div>' +
 					'</div>' +
 				'</div>'
@@ -971,23 +971,8 @@
 			'<span class="icon-bar"></span>' +
 			'<span class="icon-bar"></span>' +
 		'</button>' +
-		'<a class="navbar-brand" href="#/dashboard" ng-click="appController.displayHome()">Tvrbo Admin</a>' +
-	'</div>' +
-	'<ul class="nav navbar-top-links navbar-right hidden-xs">' +
-		'<li>' +
-			'<a href="https://www.tvrbo.pro">' +
-				'<i class="fa fa-globe fa-lg"></i>&nbsp;Tvrbo' +
-			'</a>' +
-		'</li>' +
-		// '<!--<li uib-dropdown>' +
-		// 	'<a uib-dropdown-toggle href="#" aria-expanded="true" ng-controller="username">' +
-		// 		'<i class="fa fa-user fa-lg"></i>&nbsp;{{ username }}&nbsp;<i class="fa fa-caret-down"></i>' +
-		// 	'</a>' +
-		// 	'<ul class="dropdown-menu dropdown-user" role="menu">' +
-		// 		'<li><a href="#" onclick="logout()"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>' +
-		// 	'</ul>' +
-		// '</li>-->' +
-		'</ul>';
+		'<a class="navbar-brand" href="#/dashboard" ng-click="appController.displayHome()">Admin Fura</a>' +
+	'</div>'
 
 
 /***/ }),
@@ -1099,34 +1084,15 @@
 							.title('Summary')
 							.link('/summary')
 					)
-					.addChild(nga.menu()
-							.title('Store')
-							.icon('<span class="fa fa-shopping-cart fa-fw"></span>')
-							// .active(function(path){return path.indexOf('/questions') === 0})
-							.addChild(nga.menu(admin.getEntity('products'))
-									.icon('<span class="fa fa-gift fa-fw"></span>')
-									.title('Products')
-							)
-							.addChild(nga.menu(admin.getEntity('questions'))
-									.active(function(path){return path.indexOf('/questions') === 0})
-									.icon('<span class="fa fa-users fa-fw"></span>')
-									.title('Questions')
-							)
-					// 		.addChild(nga.menu()
-					// 				.title('Purchases')
-					// 				.link('/purchases/list')
-					// 				// .link('/questions/list?search={"has_ordered":"true"}')
-					// 				.icon('<span class="fa fa-credit-card fa-fw"></span>'))
+					.addChild(nga.menu(admin.getEntity('questions'))
+							.active(function(path){return path.indexOf('/questions') === 0})
+							.icon('<span class="fa fa-question-circle fa-fw"></span>')
+							.title('Questions')
 					)
 					.addChild(nga.menu(admin.getEntity('answers'))
-							.icon('<span class="fa fa-rss-square fa-fw"></span>')
+							.icon('<span class="fa fa-comment fa-fw"></span>')
 							.title('Answers')
 					)
-					.addChild(nga.menu(admin.getEntity('shops'))
-							.icon('<span class="fa fa-map-marker fa-fw"></span>')
-							.title('Shops')
-					)
-
 			;
 	};
 

@@ -1,5 +1,5 @@
 apps:
   - script: server.js
-    name: TvrboAdmin
+    name: Admin_Fura
     instances: 2
     exec_mode: cluster

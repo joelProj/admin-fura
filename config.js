@@ -39,6 +39,6 @@ nconf.defaults(defaults);
 var k;
 for(k in defaults) {
     if(defaults.hasOwnProperty(k)) {
-        exports[k.replace(/^ADMIN_/, "")] = nconf.get(k); // REMOVING THE VARIABLE'S PREFIX _TVRBOREACT
+        exports[k.replace(/^ADMIN_/, "")] = nconf.get(k);
     }
 }

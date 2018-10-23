@@ -66,7 +66,7 @@ function startServer(){
 							<meta http-equiv="X-UA-Compatible" content="IE=edge">
 							<meta name="viewport" content="width=device-width, initial-scale=1">
 							<link href="/vendor.css" rel="stylesheet" />
-							<title>Right Side Coffee</title>
+							<title>Admin Fura</title>
 					</head>
 					<body ng-app="admin">
 							<div ui-view></div>
