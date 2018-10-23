@@ -54,7 +54,7 @@ function startServer(){
 
 	// API
 	server.use(cookieParser());
-	server.use(auth.check);
+	// server.use(auth.check);
 	server.use(apiRouter);
 
 	// STATIC FILES
