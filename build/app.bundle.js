@@ -75,7 +75,7 @@
 	    __webpack_require__(8)(nga, admin);
 
 	    // PAGES
-	    __webpack_require__(14)($stateProvider);
+	    // require('./pages/summary')($stateProvider);
 
 
 	    admin.dashboard(__webpack_require__(2)(nga, admin));
@@ -412,119 +412,40 @@
 	module.exports = function (nga, admin) {
 
 			var answers = admin.getEntity('answers');
+			var questions = admin.getEntity('questions');
 
 			answers.identifier(nga.field('_id'));
 
 			answers.listView()
 			.title('Answers')
 			.fields([
-					nga.field('title').isDetailLink(true),
-					nga.field('date', 'date').format('dd/MM/yyyy HH:mm'),
+				nga.field('question', 'reference')
+				.targetEntity(questions)
+				.targetField(nga.field('id_fura'))
+				.isDetailLink(true),
+				nga.field('group').isDetailLink(true),
+				nga.field('value').isDetailLink(true),
+				nga.field('date', 'date').format('dd/MM/yyyy HH:mm'),
 			])
 			.sortField('date')
 			.sortDir('DESC')
 			.exportFields([])
-			.listActions(['edit']);
+			.listActions(['show'])
+			.filters([
+				nga.field('question'),		
+			]);
 
-			answers.editionView()
-					.title('Post')
-					.fields([
-							nga.field('title').validation({required: true}),
-							nga.field('thumbnail')
-								.attributes({placeholder: "https://server/image.jpeg"})
-								.validation({required: true, pattern: /^https:\/\/.+/}),
-
-							nga.field('blocks', 'embedded_list')
-								.label('Content blocks')
-								.sortField('index')
-								.sortDir('ASC')
-								.targetFields([
-									// 'title', 'paragraph', 'quote', 'image', 'images', 'divider'
-									nga.field('type', 'choice').label('Tipo')
-										.defaultValue('paragraph')
-										.validation({required: true})
-										.choices([
-											{label: 'Title', value: 'title'},
-											{label: 'Paragraph', value: 'paragraph'},
-											{label: 'Quote', value: 'quote'},
-											{label: 'Wide image', value: 'image'},
-											{label: 'Two images', value: 'images'},
-											{label: 'Divider', value: 'divider'}
-										]),
-
-									// TEXT
-									nga.field('text', 'text')
-										.cssClasses(function(entity){
-											if(['title', 'paragraph', 'quote'].indexOf(entity.values.type) >= 0) return "ng-admin-type-text col-sm-10 col-md-8 col-lg-7";
-											else return "hidden";
-										}),
-
-									// IMAGE
-									nga.field('url1')
-										.label('Image 1')
-										.cssClasses(function(entity){
-											if(['image', 'images'].indexOf(entity.values.type) >= 0) return "col-sm-10 col-md-8 col-lg-7";
-											else return "hidden";
-										}),
-									nga.field('url2')
-										.label('Image 2')
-										.cssClasses(function(entity){
-											if(['images'].indexOf(entity.values.type) >= 0) return "col-sm-10 col-md-8 col-lg-7";
-											else return "hidden";
-										})
-								])
-
-					]);
-
-			answers.creationView()
-					.title('New answer')
-					.fields([
-							nga.field('title').validation({required: true}),
-							nga.field('thumbnail')
-								.attributes({placeholder: "https://server/image.jpeg"})
-								.validation({required: true, pattern: /^https:\/\/.+/}),
-
-							nga.field('blocks', 'embedded_list')
-								.label('Content blocks')
-								.sortField('index')
-								.sortDir('ASC')
-								.targetFields([
-									// 'title', 'paragraph', 'quote', 'image', 'images', 'divider'
-									nga.field('type', 'choice').label('Tipo')
-										.defaultValue('paragraph')
-										.validation({required: true})
-										.choices([
-											{label: 'Title', value: 'title'},
-											{label: 'Paragraph', value: 'paragraph'},
-											{label: 'Quote', value: 'quote'},
-											{label: 'Wide image', value: 'image'},
-											{label: 'Two images', value: 'images'},
-											{label: 'Divider', value: 'divider'}
-										]),
-
-									// TEXT
-									nga.field('text', 'text')
-										.cssClasses(function(entity){
-											if(['title', 'paragraph', 'quote'].indexOf(entity.values.type) >= 0) return "ng-admin-type-text col-sm-10 col-md-8 col-lg-7";
-											else return "hidden";
-										}),
-
-									// IMAGE
-									nga.field('url1')
-										.label('Image 1')
-										.cssClasses(function(entity){
-											if(['image', 'images'].indexOf(entity.values.type) >= 0) return "col-sm-10 col-md-8 col-lg-7";
-											else return "hidden";
-										}),
-									nga.field('url2')
-										.label('Image 2')
-										.cssClasses(function(entity){
-											if(['images'].indexOf(entity.values.type) >= 0) return "col-sm-10 col-md-8 col-lg-7";
-											else return "hidden";
-										})
-								])
-
-					]);
+			answers.showView()
+			.title('Answers')
+			.fields([
+				nga.field('question', 'reference')
+				.targetEntity(questions)
+				.targetField(nga.field('id_fura'))
+				.isDetailLink(true),
+				nga.field('group'),
+				nga.field('value'),
+				nga.field('date', 'date').format('dd/MM/yyyy HH:mm'),
+			]);
 
 			return answers;
 	};
@@ -848,11 +769,11 @@
 
 	module.exports = function(nga, admin) {
 			return nga.menu()
-					.addChild(nga.menu()
-							.icon('<span class="fa fa-bar-chart fa-fw"></span>')
-							.title('Summary')
-							.link('/summary')
-					)
+					// .addChild(nga.menu()
+					// 		.icon('<span class="fa fa-bar-chart fa-fw"></span>')
+					// 		.title('Summary')
+					// 		.link('/summary')
+					// )
 					.addChild(nga.menu(admin.getEntity('questions'))
 							.active(function(path){return path.indexOf('/questions') === 0})
 							.icon('<span class="fa fa-question-circle fa-fw"></span>')
@@ -864,150 +785,6 @@
 					)
 			;
 	};
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-	module.exports = function($stateProvider){
-			$stateProvider.state('summary', {
-					parent: 'main',
-					url: '/summary',
-					controller: controller,
-					controllerAs: 'controller',
-					template: template
-			});
-	};
-
-	function controller($stateParams, notification, $http) {
-		var self = this;
-		// this.postId = $stateParams.id;
-		// notification is the service used to display notifications on the top of the screen
-		self.notification = notification;
-
-		$http.get('/api/summary')
-		.then(function(response) {
-			self.summary = response.data;
-		})
-		.catch(function(){
-			self.notification.log("Could not connect to the server");
-		});
-	}
-
-	controller.inject = ['$stateParams', 'notification', '$http'];
-	// controller.prototype.sendEmail = function() {
-	// 	this.notification.log('Email successfully sent to ' + this.email);
-	// };
-
-	var template =
-		'<div class="row">' +
-			'<div class="col-lg-12">' +
-				'<div class="page-header">' +
-					'<h1>Resumen <small class="pull-right">Current year</small></h1>' +
-					'<h5 class="text-muted">Current summary</h5>' +
-				'</div>' +
-			'</div>' +
-		'</div>' +
-
-		'<div class="row">' +
-
-				// pending
-				'<div class="col-lg-4 col-md-6">' +
-						'<div class="panel panel-red">' +
-								'<div class="panel-heading">' +
-										'<div class="row">' +
-												'<div class="col-xs-3">' +
-														'<i class="fa fa-th-list fa-5x"></i>' +
-												'</div>' +
-												'<div class="col-xs-9 text-right">' +
-														'<div class="huge ng-binding">{{controller.summary.pending}}</div>' +
-														'<div>Pending</div>' +
-												'</div>' +
-										'</div>' +
-								'</div>' +
-								'<a ui-sref="list({entity:\'commands\', search:{status:\'Pending\'}})" href="#/purchases/list?search=%7B%22status%22%3A%22Pending%22%7D">' +
-										'<div class="panel-footer">' +
-												'<span class="pull-left">See pending</span>' +
-												'<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>' +
-												'<div class="clearfix"></div>' +
-										'</div>' +
-								'</a>' +
-						'</div>' +
-				'</div>' +
-
-				// processing
-				'<div class="col-lg-4 col-md-6">' +
-						'<div class="panel panel-yellow">' +
-								'<div class="panel-heading">' +
-										'<div class="row">' +
-												'<div class="col-xs-3">' +
-														'<i class="fa fa-th-list fa-5x"></i>' +
-												'</div>' +
-												'<div class="col-xs-9 text-right">' +
-														'<div class="huge ng-binding">{{controller.summary.processing || 0}}</div>' +
-														'<div>Processing</div>' +
-												'</div>' +
-										'</div>' +
-								'</div>' +
-								'<a ui-sref="list({entity:\'commands\', search:{status:\'Processing\'}})" href="#/purchases/list?search=%7B%22status%22%3A%22Processing%22%7D">' +
-										'<div class="panel-footer">' +
-												'<span class="pull-left">See processing</span>' +
-												'<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>' +
-												'<div class="clearfix"></div>' +
-										'</div>' +
-								'</a>' +
-						'</div>' +
-				'</div>' +
-
-				// sales
-				'<div class="col-lg-4 col-md-6">' +
-						'<div class="panel panel-primary">' +
-								'<div class="panel-heading">' +
-										'<div class="row">' +
-												'<div class="col-xs-3">' +
-														'<i class="fa fa-usd fa-5x"></i>' +
-												'</div>' +
-												'<div class="col-xs-9 text-right">' +
-														'<div class="huge ng-binding">{{controller.summary.revenue | number:2}} €</div>' +
-														'<div>Revenue</div>' +
-												'</div>' +
-										'</div>' +
-								'</div>' +
-								'<a ui-sref="list({entity:\'invoices\'})" href="#/invoices/list">' +
-										'<div class="panel-footer">' +
-												'<span class="pull-left">See purchases</span>' +
-												'<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>' +
-												'<div class="clearfix"></div>' +
-										'</div>' +
-								'</a>' +
-						'</div>' +
-				'</div>' +
-
-				// new questions
-				'<div class="col-lg-4 col-md-6">' +
-						'<div class="panel panel-green">' +
-								'<div class="panel-heading">' +
-										'<div class="row">' +
-												'<div class="col-xs-3">' +
-														'<i class="fa fa-users fa-5x"></i>' +
-												'</div>' +
-												'<div class="col-xs-9 text-right">' +
-														'<div class="huge ng-binding">{{controller.summary.questions}}</div>' +
-														'<div>New questions</div>' +
-												'</div>' +
-										'</div>' +
-								'</div>' +
-								'<a ui-sref="list({entity:\'questions\'})" href="#/questions/list">' +
-										'<div class="panel-footer">' +
-												'<span class="pull-left">See questions</span>' +
-												'<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>' +
-												'<div class="clearfix"></div>' +
-										'</div>' +
-								'</a>' +
-						'</div>' +
-				'</div>' +
-		'</div>';
 
 
 /***/ })

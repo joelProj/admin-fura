@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var questionRouter = require('./question');
 var answerRouter = require('./answer');
 
-var summaryRouter = require('./summary');
+// var summaryRouter = require('./summary');
 
 // ROUTER
 var router = express.Router();
@@ -15,7 +15,7 @@ router.use('/api', bodyParser.json({limit: '10mb'}));
 router.use('/api', questionRouter);
 router.use('/api', answerRouter);
 
-router.use('/api', summaryRouter);
+// router.use('/api', summaryRouter);
 
 // Error handling
 router.use('/api', function(err, req, res, next){

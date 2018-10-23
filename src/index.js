@@ -29,7 +29,7 @@ crmApp.config(['NgAdminConfigurationProvider', '$stateProvider', '$translateProv
     require('./entities/answers')(nga, admin);
 
     // PAGES
-    require('./pages/summary')($stateProvider);
+    // require('./pages/summary')($stateProvider);
 
 
     admin.dashboard(require('./dashboard')(nga, admin));
