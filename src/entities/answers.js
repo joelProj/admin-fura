@@ -9,9 +9,6 @@ module.exports = function (nga, admin) {
 		.fields([
 				nga.field('title').isDetailLink(true),
 				nga.field('date', 'date').format('dd/MM/yyyy HH:mm'),
-				// nga.field('product', 'reference').label('Producto relacionado')
-				// 	.targetEntity(admin.getEntity('products'))
-				// 	.targetField(nga.field('translations.es.name'))
 		])
 		.sortField('date')
 		.sortDir('DESC')

@@ -24,13 +24,9 @@ crmApp.config(['NgAdminConfigurationProvider', '$stateProvider', '$translateProv
 
     admin.addEntity(nga.entity('questions'));
     admin.addEntity(nga.entity('answers'));
-    admin.addEntity(nga.entity('products'));
-    admin.addEntity(nga.entity('shops'));
 
     require('./entities/questions')(nga, admin);
     require('./entities/answers')(nga, admin);
-    require('./entities/products')(nga, admin);
-    require('./entities/shops')(nga, admin);
 
     // PAGES
     require('./pages/summary')($stateProvider);

@@ -4,8 +4,6 @@ var bodyParser = require('body-parser');
 // API ROUTINES
 var questionRouter = require('./question');
 var answerRouter = require('./answer');
-var productRouter = require('./product');
-var shopRouter = require('./shop');
 
 var summaryRouter = require('./summary');
 
@@ -16,8 +14,6 @@ router.use('/api', bodyParser.json({limit: '10mb'}));
 // ROUTES
 router.use('/api', questionRouter);
 router.use('/api', answerRouter);
-router.use('/api', productRouter);
-router.use('/api', shopRouter);
 
 router.use('/api', summaryRouter);
 

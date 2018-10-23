@@ -55,7 +55,7 @@
 
 	directivesInit(crmApp);
 
-	crmApp.factory('httpInterceptor', __webpack_require__(12));
+	crmApp.factory('httpInterceptor', __webpack_require__(10));
 
 	crmApp.config(['NgAdminConfigurationProvider', '$stateProvider', '$translateProvider', '$httpProvider', function(NgAdminConfigurationProvider, $stateProvider, $translateProvider, $httpProvider) {
 
@@ -70,28 +70,24 @@
 
 	    admin.addEntity(nga.entity('questions'));
 	    admin.addEntity(nga.entity('answers'));
-	    admin.addEntity(nga.entity('products'));
-	    admin.addEntity(nga.entity('shops'));
 
-	    __webpack_require__(10)(nga, admin);
-	    __webpack_require__(8)(nga, admin);
 	    __webpack_require__(9)(nga, admin);
-	    __webpack_require__(11)(nga, admin);
+	    __webpack_require__(8)(nga, admin);
 
 	    // PAGES
-	    __webpack_require__(16)($stateProvider);
+	    __webpack_require__(14)($stateProvider);
 
 
 	    admin.dashboard(__webpack_require__(2)(nga, admin));
-	    admin.header(__webpack_require__(13));
-	    admin.menu(__webpack_require__(15)(nga, admin));
+	    admin.header(__webpack_require__(11));
+	    admin.menu(__webpack_require__(13)(nga, admin));
 
 
 	    // CONFIG
 	    nga.configure(admin);
 
 	    // LANGUAGE
-	    __webpack_require__(14)($translateProvider);
+	    __webpack_require__(12)($translateProvider);
 	}]);
 
 
@@ -424,9 +420,6 @@
 			.fields([
 					nga.field('title').isDetailLink(true),
 					nga.field('date', 'date').format('dd/MM/yyyy HH:mm'),
-					// nga.field('product', 'reference').label('Producto relacionado')
-					// 	.targetEntity(admin.getEntity('products'))
-					// 	.targetField(nga.field('translations.es.name'))
 			])
 			.sortField('date')
 			.sortDir('DESC')
@@ -539,163 +532,6 @@
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var removeDiacritics = __webpack_require__(1).removeDiacritics;
-
-	module.exports = function (nga, admin) {
-
-			var products = admin.getEntity('products');
-
-			products.identifier(nga.field('_id'));
-
-			products.listView()
-			.title('Products')
-			.fields([
-					nga.field('name').isDetailLink(true)
-						.cssClasses(function(entry) { // add custom CSS classes to inputs and columns
-							if(!entry) return '';
-							else if (!entry.values.active) return 'bg-danger';
-							else return '';
-						}),
-					nga.field('type', 'choice')
-						.choices([
-							{label: 'Coffee', value: 'Coffee'},
-							{label: 'Course', value: 'Course'},
-							// {label: 'Pack', value: 'Pack'},
-							{label: 'Merchandising', value: 'Merchandising'},
-							{label: 'Equipment', value: 'Equipment'}
-						])
-						.cssClasses(function(entry) { // add custom CSS classes to inputs and columns
-								if(!entry) return '';
-								else if (!entry.values.active) return 'bg-danger';
-								else return '';
-						}),
-					// nga.field('price', 'float').format('0.00').isDetailLink(true),
-					nga.field('price')
-						.template('{{value | number:2}}')
-						.cssClasses(function(entry) { // add custom CSS classes to inputs and columns
-								if(!entry) return '';
-								else if (!entry.values.active) return 'bg-danger';
-								else return '';
-						})
-						.isDetailLink(true)
-			])
-			.sortField('name')
-			.sortDir('ASC')
-			.exportOptions({
-				quotes: true,
-				delimiter: ';'
-			})
-			.exportFields([
-				nga.field('name')
-					.map(removeDiacritics),
-				nga.field('type'),
-				nga.field('price')
-					.map(function(value){ return (value||0).toFixed(2); })
-			])
-			.listActions(['edit'])
-			.filters([
-					nga.field('type', 'choice').label('Tipo de producto').pinned(true)
-						.choices([
-							{label: 'Coffee', value: 'Coffee'},
-							{label: 'Course', value: 'Course'},
-							// {label: 'Pack', value: 'Pack'},
-							{label: 'Merchandising', value: 'Merchandising'},
-							{label: 'Equipment', value: 'Equipment'}
-						])
-			]);
-
-			// EDIT
-
-			products.editionView()
-					.title('Product')
-					.actions(['<product-duplicate post="entry"></product-duplicate>', 'list', 'delete'])
-					.onSubmitSuccess(['progression', 'notification', '$state', 'entry', 'entity', function(progression, notification, $state, entry, entity) {
-							// stop the progress bar
-							progression.done();
-							// add a notification
-							// notification.log(`Element #${entry._identifierValue} successfully edited.`, { addnCls: 'humane-flatty-success' });
-							// redirect to the list view
-							// $state.go($state.get('list'), { entity: entity.name() });
-							// cancel the default action (redirect to the edition view)
-							location.reload();
-							return false;
-					}])
-					.fields([
-						nga.field('active', 'choice')
-							.choices([
-								{label: 'Inactive', value: false},
-								{label: 'Active', value: true}
-							]),
-						nga.field('type', 'choice')
-							.validation({required: true})
-							.choices([
-								{label: 'Coffee', value: 'Coffee'},
-								{label: 'Course', value: 'Course'},
-								// {label: 'Pack', value: 'Pack'},
-								{label: 'Merchandising', value: 'Merchandising'},
-								{label: 'Equipment', value: 'Equipment'}
-							]),
-						nga.field('name').validation({required: true}),
-						nga.field('description'),
-
-						nga.field('images', 'embedded_list')
-							.targetFields([
-									nga.field('url').label('URL').validation({required: true}),
-									nga.field('description')
-							]),
-						// nga.field('upload', 'file')
-						//   .uploadInformation({ 'url': '/api/products/' + location.hash.substr(16) + '/image', 'apifilename': 'file' }),
-
-						nga.field('price', 'float'),
-						nga.field('vat', 'number').label('VAT (%)'),
-						nga.field('weight', 'float').attributes({placeholder: '(grams)'})
-					]);
-
-
-
-
-			products.creationView()
-					.title('New product')
-					.fields([
-						nga.field('active', 'choice')
-							.choices([
-								{label: 'Inactive', value: false},
-								{label: 'Active', value: true}
-							])
-							.defaultValue(true),
-						nga.field('type', 'choice')
-							.validation({required: true})
-							.choices([
-								{label: 'Coffee', value: 'Coffee'},
-								{label: 'Course', value: 'Course'},
-								// {label: 'Pack', value: 'Pack'},
-								{label: 'Merchandising', value: 'Merchandising'},
-								{label: 'Equipment', value: 'Equipment'}
-							]),
-						nga.field('name').validation({required: true}),
-						nga.field('description'),
-
-						nga.field('images', 'embedded_list')
-							.targetFields([
-									nga.field('url').label('URL').validation({required: true}),
-									nga.field('description')
-							]),
-						// nga.field('upload', 'file')
-						//   .uploadInformation({ 'url': '/api/products/' + location.hash.substr(16) + '/image', 'apifilename': 'file' }),
-
-						nga.field('price', 'float'),
-						nga.field('vat', 'number').label('VAT (%)'),
-						nga.field('weight', 'float').attributes({placeholder: '(grams)'})
-					]);
-
-			return products;
-	};
-
-
-/***/ }),
-/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var removeDiacritics = __webpack_require__(1).removeDiacritics;
@@ -864,74 +700,7 @@
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-	module.exports = function (nga, admin) {
-
-			var shops = admin.getEntity('shops');
-
-			shops.identifier(nga.field('_id'));
-
-			shops.listView()
-			.title('Tiendas')
-			.fields([
-					nga.field('name')
-						.isDetailLink(true),
-					nga.field('city')
-						.isDetailLink(true)
-			])
-			.sortField('name')
-			.sortDir('ASC')
-			.exportFields([])
-			.listActions(['edit']);
-
-			shops.editionView()
-					.title('Tienda')
-					.fields([
-						nga.field('name')
-							.validation({required: true})
-							.isDetailLink(true),
-						nga.field('address')
-							.validation({required: true})
-							.isDetailLink(true),
-						nga.field('zip')
-							.validation({required: true})
-							.isDetailLink(true),
-						nga.field('city')
-							.validation({required: true})
-							.isDetailLink(true),
-						nga.field('image')
-							.validation({required: true})
-							.isDetailLink(true)
-					]);
-
-			shops.creationView()
-					.title('Nueva Tienda')
-					.fields([
-						nga.field('name')
-							.validation({required: true})
-							.isDetailLink(true),
-						nga.field('address')
-							.validation({required: true})
-							.isDetailLink(true),
-						nga.field('zip')
-							.validation({required: true})
-							.isDetailLink(true),
-						nga.field('city')
-							.validation({required: true})
-							.isDetailLink(true),
-						nga.field('image')
-							.validation({required: true})
-							.isDetailLink(true)
-					]);
-
-			return shops;
-	};
-
-
-/***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports) {
 
 	module.exports = ['$q', '$injector', 'notification', function($q, $injector, notification) {
@@ -962,7 +731,7 @@
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports) {
 
 	module.exports = '<div class="navbar-header">' +
@@ -976,7 +745,7 @@
 
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports) {
 
 	module.exports = function($translateProvider){
@@ -1074,7 +843,7 @@
 
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports) {
 
 	module.exports = function(nga, admin) {
@@ -1098,7 +867,7 @@
 
 
 /***/ }),
-/* 16 */
+/* 14 */
 /***/ (function(module, exports) {
 
 	module.exports = function($stateProvider){
