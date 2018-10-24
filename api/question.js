@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 // DB
 const Question = require('../models/question.js');
+const Answer = require('../models/answer.js');
 
 // API DEFINITIONS
 router.get('/questions/:id', getQuestion);
@@ -42,8 +43,15 @@ async function addQuestion(req, res, next) {
 }
 
 async function removeQuestion(req, res, next){
-	await Question.findByIdAndRemove(req.params.id).exec();
-	res.send();
+        // Find all answers with question this ID and delete them (keep database coherent)
+        var deleteAnswers = await Answer.find({quest:req.params.id}).select('_id').lean().exec();
+        
+        for (var i=0; i<deleteAnswers.length; i++) {
+            await Answer.findByIdAndRemove(deleteAnswers[i]._id).exec();
+        }
+        
+        await Question.findByIdAndRemove(req.params.id).exec();
+        res.send({});
 }
 
 module.exports = router;
