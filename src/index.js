@@ -1,13 +1,9 @@
 // require('ng-admin/build/ng-admin.min.js');
 // require('../node_modules/ng-admin/build/ng-admin.min.css');
 
-var directivesInit = require('./directives');
-
 // BOOTSTRAP THE ADMIN
 
 var crmApp = angular.module('admin', ['ng-admin']);
-
-directivesInit(crmApp);
 
 crmApp.factory('httpInterceptor', require('./factories/http-interceptor'));
 

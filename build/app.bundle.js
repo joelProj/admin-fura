@@ -47,15 +47,11 @@
 	// require('ng-admin/build/ng-admin.min.js');
 	// require('../node_modules/ng-admin/build/ng-admin.min.css');
 
-	var directivesInit = __webpack_require__(6);
-
 	// BOOTSTRAP THE ADMIN
 
 	var crmApp = angular.module('admin', ['ng-admin']);
 
-	directivesInit(crmApp);
-
-	crmApp.factory('httpInterceptor', __webpack_require__(9));
+	crmApp.factory('httpInterceptor', __webpack_require__(4));
 
 	crmApp.config(['NgAdminConfigurationProvider', '$stateProvider', '$translateProvider', '$httpProvider', function(NgAdminConfigurationProvider, $stateProvider, $translateProvider, $httpProvider) {
 
@@ -71,23 +67,23 @@
 	    admin.addEntity(nga.entity('questions'));
 	    admin.addEntity(nga.entity('answers'));
 
-	    __webpack_require__(8)(nga, admin);
-	    __webpack_require__(7)(nga, admin);
+	    __webpack_require__(3)(nga, admin);
+	    __webpack_require__(2)(nga, admin);
 
 	    // PAGES
 	    // require('./pages/summary')($stateProvider);
 
 
 	    admin.dashboard(__webpack_require__(1)(nga, admin));
-	    admin.header(__webpack_require__(10));
-	    admin.menu(__webpack_require__(12)(nga, admin));
+	    admin.header(__webpack_require__(5));
+	    admin.menu(__webpack_require__(7)(nga, admin));
 
 
 	    // CONFIG
 	    nga.configure(admin);
 
 	    // LANGUAGE
-	    __webpack_require__(11)($translateProvider);
+	    __webpack_require__(6)($translateProvider);
 	}]);
 
 
@@ -112,127 +108,6 @@
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
-
-	module.exports = ['$http', '$q', 'notification', '$state', function($http, $q, notification, $state) {
-		return {
-			restrict: 'E',
-			scope: { customer: '&' },
-			link: function (scope) {
-				scope.markRetail = function () {
-					$http.put('/api/customers/set/retail', { customers: [scope.customer().values._id]})
-					.then(function(response) {
-						if(response.data && !response.data.error) {
-							notification.log('Customers marked as retail');
-							$state.reload();
-						}
-						else notification.log(response.data.error || "Unable to complete the action");
-					})
-					.catch(function(){
-						notification.log("Could not connect to the server");
-					});
-				};
-			},
-			template: '<a class="btn btn-success" ng-click="markRetail()"><span class="glyphicon glyphicon-send"></span> <span class="hidden-xs">Mark as retail</span></a>'
-		};
-	}];
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-	module.exports = ['$http', '$q', 'notification', '$state', function($http, $q, notification, $state) {
-		return {
-			restrict: 'E',
-			scope: { customer: '&' },
-			link: function (scope) {
-				scope.markWholesale = function () {
-					$http.put('/api/customers/set/wholesale', { customers: [scope.customer().values._id]})
-					.then(function(response) {
-						if(response.data && !response.data.error) {
-							notification.log('Customers marked as wholesale');
-							$state.reload();
-						}
-						else notification.log(response.data.error || "Unable to complete the action");
-					})
-					.catch(function(){
-						notification.log("Could not connect to the server");
-					});
-				};
-			},
-			template: '<a class="btn btn-primary" ng-click="markWholesale()"><span class="glyphicon glyphicon-fire"></span> <span class="hidden-xs">Mark as wholesale</span></a>'
-		};
-	}];
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-	module.exports = ['$http', '$q', 'notification', '$state', function($http, $q, notification, $state) {
-	  'use strict';
-
-	  return {
-	      restrict: 'E',
-	      scope: {
-	          selection: '='
-	      },
-	      link: function(scope, element, attrs) {
-	          scope.markAsDone = function() {
-	            $http.put('/api/customers/set/retail', {customers: scope.selection.map(function(e){ return e.values._id; })} )
-	            .then(function(){ return $state.reload(); })
-	            .then(function(){ notification.log(scope.selection.length + ' customers marked as retail', { addnCls: 'humane-flatty-success' }); } )
-	            .catch(function(e){ notification.log('Could not update the users', { addnCls: 'humane-flatty-error' }) && console.error(e); });
-	          }
-	      },
-	      template: '<span ng-click="markAsDone()"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> <span class="hidden-xs">Mark as retail</span></a>'
-	  };
-	}];
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-	module.exports = ['$http', '$q', 'notification', '$state', function($http, $q, notification, $state) {
-	  'use strict';
-
-	  return {
-	      restrict: 'E',
-	      scope: {
-	          selection: '='
-	      },
-	      link: function(scope, element, attrs) {
-	          scope.markAsWholesale = function() {
-	            $http.put('/api/customers/set/wholesale', {customers: scope.selection.map(function(e){ return e.values._id; })} )
-	            .then(function(){ return $state.reload(); })
-	            .then(function(){ notification.log(scope.selection.length + ' customers marked as wholesale', { addnCls: 'humane-flatty-success' }); } )
-	            .catch(function(e){ notification.log('Could not update the users', { addnCls: 'humane-flatty-error' }) && console.error(e); });
-	          }
-	      },
-	      template: '<span ng-click="markAsWholesale()"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="hidden-xs">Mark as wholesale</span></a>'
-	  }
-	}];
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	module.exports = function(app){
-
-		app.directive('customersMarkWholesale', __webpack_require__(5));
-		app.directive('customersMarkRetail', __webpack_require__(4));
-
-		app.directive('customerMarkWholesale', __webpack_require__(3));
-		app.directive('customerMarkRetail', __webpack_require__(2));
-
-	};
-
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports) {
 
 	module.exports = function (nga, admin) {
@@ -278,7 +153,7 @@
 
 
 /***/ }),
-/* 8 */
+/* 3 */
 /***/ (function(module, exports) {
 
 	module.exports = function (nga, admin) {
@@ -420,7 +295,7 @@
 
 
 /***/ }),
-/* 9 */
+/* 4 */
 /***/ (function(module, exports) {
 
 	module.exports = ['$q', '$injector', 'notification', function($q, $injector, notification) {
@@ -451,7 +326,7 @@
 
 
 /***/ }),
-/* 10 */
+/* 5 */
 /***/ (function(module, exports) {
 
 	module.exports = '<div class="navbar-header">' +
@@ -465,7 +340,7 @@
 
 
 /***/ }),
-/* 11 */
+/* 6 */
 /***/ (function(module, exports) {
 
 	module.exports = function($translateProvider){
@@ -563,7 +438,7 @@
 
 
 /***/ }),
-/* 12 */
+/* 7 */
 /***/ (function(module, exports) {
 
 	module.exports = function(nga, admin) {
