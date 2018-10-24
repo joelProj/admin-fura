@@ -6,9 +6,6 @@ const Answer = require('../models/answer.js');
 // API DEFINITIONS
 router.get('/answers/:id', getAnswer);
 router.get('/answers', listAnswers);
-router.post('/answers', addAnswer);
-router.put('/answers/:id', updateAnswer);
-router.delete('/answers/:id', removeAnswer);
 
 // API ROUTINES
 async function listAnswers(req, res, next){
@@ -27,27 +24,6 @@ async function getAnswer(req, res, next){
 	const data = await Answer.findById(req.params.id).lean().exec();
 	if(!data) return res.status(404).send('Not found');
 	res.send(data);
-}
-
-async function updateAnswer(req, res, next){
-	req.body.date = new Date();
-
-	const data = await Answer.findByIdAndUpdate(req.params.id, req.body).lean().exec();
-	if(!data) return res.status(404).send('Not found');
-	res.send(data);
-}
-
-async function addAnswer(req, res, next) {
-	req.body.date = new Date();
-
-	const data = await Answer.create(req.body)
-	if(!data) return res.status(404).send('Not found');
-	res.send(data);
-}
-
-async function removeAnswer(req, res, next){
-	await Answer.findByIdAndRemove(req.params.id).exec();
-	res.send();
 }
 
 module.exports = router;
