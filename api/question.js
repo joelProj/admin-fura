@@ -58,16 +58,6 @@ async function addQuestion(req, res, next) {
 }
 
 async function removeQuestion(req, res, next){
-<<<<<<< HEAD
-	console.log("question: ", req.params.id);
-	// var answers = await Answer.find().lean().exec();
-	var answers = await Answer.find({quest: req.params.id}).lean().exec();
-	
-	console.log("answers: ", answers);
-
-	// await Question.findByIdAndRemove(req.params.id).exec();
-	res.send();
-=======
         // Find all answers with question this ID and delete them (keep database coherent)
         var deleteAnswers = await Answer.find({quest:req.params.id}).select('_id').lean().exec();
         
@@ -77,7 +67,6 @@ async function removeQuestion(req, res, next){
         
         await Question.findByIdAndRemove(req.params.id).exec();
         res.send({});
->>>>>>> 5cb59a1cf216265062328e6bed7c13fe94279ae5
 }
 
 module.exports = router;
