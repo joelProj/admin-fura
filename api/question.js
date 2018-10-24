@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 // DB
 const Question = require('../models/question.js');
+const Answer = require('../models/answer.js');
 
 // API DEFINITIONS
 router.get('/questions/:id', getQuestion);
@@ -30,19 +31,40 @@ async function getQuestion(req, res, next){
 }
 
 async function updateQuestion(req, res, next){
+	if(req.body.id_fura){
+		var count = await Question.find({id_fura: req.body.id_fura}).count().exec();
+		if(count > 0) return res.status(500).send({error: 'id_fura already exists'});
+	}
+	if(req.body.id_fura && !req.body.id_fura.length) return res.status(500).send({error: "Camp id_fura can't be empty"});
+	if(req.body.text && !req.body.text.length) return res.status(500).send({error: "Camp text can't be empty"});
+	if(req.body.group && !req.body.group.length) return res.status(500).send({error: "Camp group can't be empty"});
+	if(req.body.options && !req.body.options.length) return res.status(500).send({error: "Question must have some options"});
+	if(req.body.options){
+		var wOption = req.body.options.reduce((prev,curr)=>{if(prev) return prev; else return !curr.length}, false);
+		if(wOption) return res.status(500).send({error: "Can't have an empty option"});
+	} 
+
 	const data = await Question.findByIdAndUpdate(req.params.id, req.body).lean().exec();
 	if(!data) return res.status(404).send('Not found');
 	res.send(data);
 }
 
 async function addQuestion(req, res, next) {
-	const data = await Question.create(req.body)
-	if(!data) return res.status(404).send('Not found');
+	if(!req.body || !req.body.questionnaire || !req.body.id_fura || !req.body.group || !req.body.text || !req.body.options.length) return res.status(500).send({error: 'Missing parameters'});
+	var count = await Question.find({id_fura: req.body.id_fura}).count().exec();
+	if(count > 0) return res.status(500).send({error: 'id_fura already exists'});
+	const data = await Question.create(req.body);
 	res.send(data);
 }
 
 async function removeQuestion(req, res, next){
-	await Question.findByIdAndRemove(req.params.id).exec();
+	console.log("question: ", req.params.id);
+	// var answers = await Answer.find().lean().exec();
+	var answers = await Answer.find({quest: req.params.id}).lean().exec();
+	
+	console.log("answers: ", answers);
+
+	// await Question.findByIdAndRemove(req.params.id).exec();
 	res.send();
 }
 

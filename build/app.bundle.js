@@ -198,7 +198,13 @@
 				nga.field('id_fura').label("ID"),
 				nga.field('group').label('Group'),
 				nga.field('text').label('Question'),
-				nga.field('options', 'embedded_list').label('Options')
+				nga.field('options', 'template')
+				.template([
+				  '<div style="margin-bottom: 15px;" ng-repeat="item in value track by $index">',
+				  '<input type="text" ng-model="value[$index]" class="form-control"></input>',
+				  '</div>',
+				  '<a ng-click="value.push(\'\')"><i class="fa fa-plus"></i> Add one more</a>'
+				].join('')).label('Options')
 			]);
 
 			questions.creationView()
@@ -208,7 +214,13 @@
 				nga.field('id_fura').label("ID"),
 				nga.field('group').label('Group'),
 				nga.field('text').label('Question'),
-				nga.field('options', 'embedded_list').label('Options')
+				nga.field('options', 'template')
+				.template([
+				  '<div style="margin-bottom: 15px;" ng-repeat="item in value track by $index">',
+				  '<input type="text" ng-model="value[$index]" class="form-control"></input>',
+				  '</div>',
+				  '<a ng-click="value.push(\'\')"><i class="fa fa-plus"></i> Add one more</a>'
+				].join('')).label('Options')
 			]);
 
 			// questions.editionView()
