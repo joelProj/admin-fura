@@ -173,7 +173,7 @@
 			])
 			.sortField('id_fura')
 			.sortDir('ASC')
-			.listActions(['show','edit'])
+			.listActions(['show'])
 			.filters([
 				nga.field('questionnaire'),
 				nga.field('group')
