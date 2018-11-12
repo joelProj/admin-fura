@@ -28,7 +28,10 @@ module.exports = function (nga, admin) {
 			nga.field('id_fura').label("ID"),
 			nga.field('group').label('Group'),
 			nga.field('text').label('Question'),
-			nga.field('opcions').label('Options'),
+			nga.field('opcions', 'embedded_list').label('Options')
+			.targetFields([
+				nga.field('opt').label('Option')
+			]),
 			nga.field('date', 'date').label('Created').format('dd/MM/yyyy')
 		])
 		.actions(['edit']);
@@ -40,7 +43,10 @@ module.exports = function (nga, admin) {
 			nga.field('id_fura').label("ID"),
 			nga.field('group').label('Group'),
 			nga.field('text').label('Question'),
-			nga.field('opcions').label('Options')
+			nga.field('opcions', 'embedded_list').label('Options')
+			.targetFields([
+				nga.field('opt').label('Option')
+			])
 		]);
 
 		questions.creationView()
@@ -50,88 +56,11 @@ module.exports = function (nga, admin) {
 			nga.field('id_fura').label("ID"),
 			nga.field('group').label('Group'),
 			nga.field('text').label('Question'),
-			nga.field('opcions').label('Options')
+			nga.field('opcions', 'embedded_list').label('Options')
+			.targetFields([
+				nga.field('opt').label('Option')
+			])
 		]);
-			
-
-		// questions.editionView()
-		// 		.title('Question')
-		// 		.actions([
-		// 			'<question-mark-retail question="entry"></question-mark-retail>',
-		// 			'<question-mark-wholesale question="entry"></question-mark-wholesale>',
-		// 			'list'
-		// 		])
-		// 		.fields([
-		// 				nga.field('name'),
-		// 				nga.field('lastName').label('Last Name'),
-		// 				nga.field('type', 'choice')
-		// 					.choices([
-		// 						{label: 'Retail', value: 'Retail'},
-		// 						{label: 'Wholesale', value: 'Wholesale'}
-		// 					]),
-		// 				nga.field('email'),
-		// 				nga.field('phone'),
-		// 				nga.field('delivery.address'),
-		// 				nga.field('delivery.city'),
-		// 				nga.field('delivery.zip'),
-		// 				nga.field('billing.nif'),
-		// 				nga.field('billing.name'),
-		// 				nga.field('billing.address'),
-		// 				nga.field('billing.city'),
-		// 				nga.field('billing.zip'),
-		// 				nga.field('registered', 'date')
-		// 					.format('dd/MM/yyyy')
-		// 					.editable(false),
-
-		// 				// nga.field('purchases', 'referenced_list')
-		// 				// 		.label('Ventas')
-		// 				// 		.targetEntity(admin.getEntity('purchases'))
-		// 				// 		.targetReferenceField('question')
-		// 				// 		.targetFields([
-		// 				// 			nga.field('reference').label('Localizador').isDetailLink(true),
-		// 				// 			nga.field('date', 'date').label('Fecha').isDetailLink(true).format('dd/MM/yyyy'),
-		// 				// 			nga.field('status', 'choice').label('Estado')
-		// 				// 				.choices([
-		// 				// 					{label: 'Pago pendiente', value: 'Pending'},
-		// 				// 					{label: 'Pagada', value: 'Paid'},
-		// 				// 					{label: 'Remesa', value: 'Remitted'}
-		// 				// 				])
-		// 				// 				.cssClasses(function(entry) {
-		// 				// 						if(!entry) return '';
-		// 				// 						else if (entry.values.status == 'Pending') return 'bg-warning';
-		// 				// 						else if (entry.values.status == 'Remitted') return 'bg-info';
-		// 				// 						else if (entry.values.status == 'Paid') return 'bg-success';
-		// 				// 						else return 'bg-danger';
-		// 				// 				})
-		// 				// 		])
-		// 				// 		.perPage(10)
-		// 				// 		.sortField('date')
-		// 				// 		.sortDir('DESC')
-		// 		]);
-
-		// 		questions.creationView()
-		// 				.title('Question')
-		// 				.fields([
-		// 						nga.field('name'),
-		// 						nga.field('lastName').label('Last Name'),
-		// 						nga.field('type', 'choice')
-		// 							.choices([
-		// 								{label: 'Retail', value: 'Retail'},
-		// 								{label: 'Wholesale', value: 'Wholesale'}
-		// 							]),
-		// 						nga.field('email'),
-		// 						nga.field('phone'),
-		// 						nga.field('delivery.address'),
-		// 						nga.field('delivery.city'),
-		// 						nga.field('delivery.zip'),
-		// 						nga.field('billing.nif'),
-		// 						nga.field('billing.name'),
-		// 						nga.field('billing.address'),
-		// 						nga.field('billing.city'),
-		// 						nga.field('billing.zip')
-		// 				]);
-
-
 
 		return questions;
 };
