@@ -11,6 +11,7 @@ module.exports = function (nga, admin) {
 			nga.field('id_fura').label("ID").isDetailLink(true),
 			nga.field('group').label('Group').isDetailLink(true),
 			nga.field('text').label('Question'),
+            // nga.field('timer').label('Timer'),
 			nga.field('date', 'date').label('Created').format('dd/MM/yyyy')
 		])
 		.sortField('id_fura')
@@ -28,6 +29,7 @@ module.exports = function (nga, admin) {
 			nga.field('id_fura').label("ID"),
 			nga.field('group').label('Group'),
 			nga.field('text').label('Question'),
+            // nga.field('timer').label('Timer'),
 			nga.field('opcions', 'embedded_list').label('Options')
 			.targetFields([
 				nga.field('opt').label('Option')
@@ -43,6 +45,7 @@ module.exports = function (nga, admin) {
 			nga.field('id_fura').label("ID"),
 			nga.field('group').label('Group'),
 			nga.field('text').label('Question'),
+            // nga.field('timer').label('Timer'),
 			nga.field('opcions', 'embedded_list').label('Options')
 			.targetFields([
 				nga.field('opt').label('Option')
@@ -56,6 +59,7 @@ module.exports = function (nga, admin) {
 			nga.field('id_fura').label("ID"),
 			nga.field('group').label('Group'),
 			nga.field('text').label('Question'),
+            // nga.field('timer').label('Timer'),
 			nga.field('opcions', 'embedded_list').label('Options')
 			.targetFields([
 				nga.field('opt').label('Option')
