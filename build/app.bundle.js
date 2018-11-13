@@ -98,7 +98,7 @@
 					'<div class="row">' +
 						'<div class="col-md-12 text-center">' +
 							'<h2>Admin Fura</h2>' +
-							'<p class="text-muted">Questionnaire database admin<br/>La Fura dels Baus</p>' +
+							'<p class="text-muted">Form database admin<br/>La Fura dels Baus</p>' +
 						'</div>' +
 					'</div>' +
 				'</div>'
@@ -165,7 +165,7 @@
 			questions.listView()
 			.title('Questions')
 			.fields([
-				nga.field('questionnaire').label('Questionnaire').isDetailLink(true),
+				nga.field('form').label('Form').isDetailLink(true),
 				nga.field('id_fura').label("ID").isDetailLink(true),
 				nga.field('group').label('Group').isDetailLink(true),
 				nga.field('text').label('Question'),
@@ -175,14 +175,14 @@
 			.sortDir('ASC')
 			.listActions(['show'])
 			.filters([
-				nga.field('questionnaire'),
+				nga.field('form'),
 				nga.field('group')
 			]);
 
 			questions.showView()
 			.title('Question')
 			.fields([
-				nga.field('questionnaire').label('Questionnaire'),
+				nga.field('form').label('Form'),
 				nga.field('id_fura').label("ID"),
 				nga.field('group').label('Group'),
 				nga.field('text').label('Question'),
@@ -197,7 +197,7 @@
 			questions.editionView()
 			.title('Question')
 			.fields([
-				nga.field('questionnaire').label('Questionnaire'),
+				nga.field('form').label('Form'),
 				nga.field('id_fura').label("ID"),
 				nga.field('group').label('Group'),
 				nga.field('text').label('Question'),
@@ -210,7 +210,7 @@
 			questions.creationView()
 			.title('Question')
 			.fields([
-				nga.field('questionnaire').label('Questionnaire'),
+				nga.field('form').label('Form'),
 				nga.field('id_fura').label("ID"),
 				nga.field('group').label('Group'),
 				nga.field('text').label('Question'),

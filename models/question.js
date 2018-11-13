@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.model('Question', mongoose.Schema({
 
-    questionnaire: { type: String, required: true },
+    form: { type: String, required: true },
     id_fura: { type: String, required: true },
     group: { type: String, required: true },
     text: { type: String, required: true },

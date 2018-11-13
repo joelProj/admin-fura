@@ -56,7 +56,7 @@ async function updateQuestion(req, res, next){
 }
 
 async function addQuestion(req, res, next) {
-	if(!req.body || !req.body.questionnaire || !req.body.id_fura || !req.body.group || !req.body.text || !req.body.opcions) return res.status(500).send({error: 'Missing parameters'});
+	if(!req.body || !req.body.form || !req.body.id_fura || !req.body.group || !req.body.text || !req.body.opcions) return res.status(500).send({error: 'Missing parameters'});
 	var count = await Question.find({id_fura: req.body.id_fura}).count().exec();
 	if(count > 0) return res.status(500).send({error: 'id_fura already exists'});
 	var quest = Object.assign({}, req.body);

@@ -7,7 +7,7 @@ module.exports = function (nga, admin) {
 		questions.listView()
 		.title('Questions')
 		.fields([
-			nga.field('questionnaire').label('Questionnaire').isDetailLink(true),
+			nga.field('form').label('Form').isDetailLink(true),
 			nga.field('id_fura').label("ID").isDetailLink(true),
 			nga.field('group').label('Group').isDetailLink(true),
 			nga.field('text').label('Question'),
@@ -17,14 +17,14 @@ module.exports = function (nga, admin) {
 		.sortDir('ASC')
 		.listActions(['show'])
 		.filters([
-			nga.field('questionnaire'),
+			nga.field('form'),
 			nga.field('group')
 		]);
 
 		questions.showView()
 		.title('Question')
 		.fields([
-			nga.field('questionnaire').label('Questionnaire'),
+			nga.field('form').label('Form'),
 			nga.field('id_fura').label("ID"),
 			nga.field('group').label('Group'),
 			nga.field('text').label('Question'),
@@ -39,7 +39,7 @@ module.exports = function (nga, admin) {
 		questions.editionView()
 		.title('Question')
 		.fields([
-			nga.field('questionnaire').label('Questionnaire'),
+			nga.field('form').label('Form'),
 			nga.field('id_fura').label("ID"),
 			nga.field('group').label('Group'),
 			nga.field('text').label('Question'),
@@ -52,7 +52,7 @@ module.exports = function (nga, admin) {
 		questions.creationView()
 		.title('Question')
 		.fields([
-			nga.field('questionnaire').label('Questionnaire'),
+			nga.field('form').label('Form'),
 			nga.field('id_fura').label("ID"),
 			nga.field('group').label('Group'),
 			nga.field('text').label('Question'),
