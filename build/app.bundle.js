@@ -217,8 +217,9 @@
 			.fields([
 				nga.field('form').label('Form').isDetailLink(true),
 				nga.field('id_fura').label("ID").isDetailLink(true),
+				nga.field('timer', 'number').label("Timer (seconds)").format('0,0.00'),
+				nga.field('default').label('Default Language'),
 				nga.field('text').label('Question'),
-	            // nga.field('timer').label('Timer'),
 				nga.field('date', 'date').label('Created').format('dd/MM/yyyy')
 			])
 			.sortField('id_fura')
@@ -233,6 +234,7 @@
 			.fields([
 				nga.field('form').label('Form'),
 				nga.field('id_fura').label("ID"),
+				nga.field('timer', 'number').label("Timer (seconds)").format('0,0.00'),
 				nga.field('default').label('Default Language'),
 				nga.field('text', 'embedded_list').label('Question')
 				.targetFields([
@@ -257,6 +259,7 @@
 			.fields([
 				nga.field('form').label('Form'),
 				nga.field('id_fura').label("ID"),
+				nga.field('timer', 'number').label("Timer (seconds)").format('0,0.00'),
 				nga.field('default', 'choice').label('Default Language').choices(languages),
 				nga.field('text', 'embedded_list').label('Question')
 				.targetFields([
@@ -279,6 +282,7 @@
 			.fields([
 				nga.field('form').label('Form'),
 				nga.field('id_fura').label("ID"),
+				nga.field('timer', 'number').label("Timer (seconds)").format('0,0.00'),
 				nga.field('default', 'choice').label('Default Language').choices(languages),
 				nga.field('text', 'embedded_list').label('Question')
 				.targetFields([

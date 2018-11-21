@@ -20,7 +20,16 @@ async function listQuestions(req, res, next){
 	const count = await Question.count(JSON.parse(req.query._filters || '{}')).exec();
 	res.set("X-Total-Count", count);
 
-	const questions = await Question.find(JSON.parse(req.query._filters || '{}')).sort(sortBy).skip(start).limit(perPage).exec();
+	const questions = await Question.find(JSON.parse(req.query._filters || '{}')).sort(sortBy).skip(start).limit(perPage).lean().exec();
+	questions.map((quest)=>{
+		var def = quest.default;
+		quest.text = JSON.parse(quest.text);
+		quest.text = quest.text.reduce((prev,curr)=>{
+			if(curr.lang == def) return curr.text;
+			return prev;
+		},'');
+		return quest;
+	})
 	res.send(questions);
 }
 
@@ -29,19 +38,19 @@ async function getQuestion(req, res, next){
 	if(!data) return res.status(404).send('Not found');
 	data.text = JSON.parse(data.text);
 	data.answers = JSON.parse(data.answers);
-	console.log("GET DATA: ", data);
-	console.log("OPTIONS VALUES: ", data.answers[0].values);
 	
 	res.send(data);
 }
 
 async function updateQuestion(req, res, next){
-	console.log("UPDATE BODY: ", req.body);
-	if(!req.body || !req.body.form || !req.body.form.length || !req.body.id_fura || !req.body.id_fura.length || !req.body.default || !req.body.text.length || !req.body.answers.length) return res.status(500).send({error: 'Missing parameters'});
+	if(!req.body || !req.body.form || !req.body.form.length || !req.body.id_fura || !req.body.id_fura.length || !req.body.timer || !req.body.default || !req.body.text.length || !req.body.answers.length) return res.status(500).send({error: 'Missing parameters'});
 	
 	var q = await Question.findOne({id_fura: req.body.id_fura}).lean().exec();
 	if(q && q._id != req.body._id) return res.status(500).send({error: 'id_fura already exists'});
 	
+	//Check timer can't be negative
+	if(req.body.timer < 0) return res.status(500).send({error: 'Timer can not be negative'});
+
 	//Check texts and values has same languages
 	if(req.body.text.length != req.body.answers.length) return res.status(500).send({error: 'Must have same languages'});
 	var textLanguages = req.body.text.map((text)=>{return text.lang;});
@@ -92,12 +101,15 @@ async function updateQuestion(req, res, next){
 }
 
 async function addQuestion(req, res, next) {
-	if(!req.body || !req.body.form || !req.body.id_fura || !req.body.default || !req.body.text.length || !req.body.answers.length) return res.status(500).send({error: 'Missing parameters'});
+	if(!req.body || !req.body.form || !req.body.form.length || !req.body.id_fura || !req.body.id_fura.length || !req.body.timer || !req.body.default || !req.body.text.length || !req.body.answers.length) return res.status(500).send({error: 'Missing parameters'});
 	
 	//Check id already exists
 	var count = await Question.find({id_fura: req.body.id_fura}).count().exec();
 	if(count > 0) return res.status(500).send({error: 'id_fura already exists'});
 	
+	//Check timer can't be negative
+	if(req.body.timer < 0) return res.status(500).send({error: 'Timer can not be negative'});
+
 	//Check texts and values has same languages
 	if(req.body.text.length != req.body.answers.length) return res.status(500).send({error: 'Must have same languages'});
 	var textLanguages = req.body.text.map((text)=>{return text.lang;});

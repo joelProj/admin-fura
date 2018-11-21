@@ -7,6 +7,7 @@ const Schema = mongoose.model('Question', mongoose.Schema({
     default: { type: String, required: true },
     text: { type: String, required: true },
     // timer: { type: Number, required: false, min: [0, 'Value must be positive'], default:0},
+    timer: { type: Number, required: true}, //amount of seconds
     answers: { type: String, required: true },
     date: { type: Date, default: Date.now }
 
