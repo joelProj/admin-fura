@@ -17,6 +17,7 @@ async function listAnswers(req, res, next){
 	res.set("X-Total-Count", count);
 
 	const answers = await Answer.find(JSON.parse(req.query._filters || '{}')).sort(sortBy).skip(start).limit(perPage).exec();
+	console.log("ANSWER: ", answers);
 	res.send(answers);
 }
 

@@ -51,7 +51,7 @@
 
 	var crmApp = angular.module('admin', ['ng-admin']);
 
-	crmApp.factory('httpInterceptor', __webpack_require__(4));
+	crmApp.factory('httpInterceptor', __webpack_require__(5));
 
 	crmApp.config(['NgAdminConfigurationProvider', '$stateProvider', '$translateProvider', '$httpProvider', function(NgAdminConfigurationProvider, $stateProvider, $translateProvider, $httpProvider) {
 
@@ -67,28 +67,75 @@
 	    admin.addEntity(nga.entity('questions'));
 	    admin.addEntity(nga.entity('answers'));
 
+	    __webpack_require__(4)(nga, admin);
 	    __webpack_require__(3)(nga, admin);
-	    __webpack_require__(2)(nga, admin);
 
 	    // PAGES
 	    // require('./pages/summary')($stateProvider);
 
 
-	    admin.dashboard(__webpack_require__(1)(nga, admin));
-	    admin.header(__webpack_require__(5));
-	    admin.menu(__webpack_require__(7)(nga, admin));
+	    admin.dashboard(__webpack_require__(2)(nga, admin));
+	    admin.header(__webpack_require__(6));
+	    admin.menu(__webpack_require__(8)(nga, admin));
 
 
 	    // CONFIG
 	    nga.configure(admin);
 
 	    // LANGUAGE
-	    __webpack_require__(6)($translateProvider);
+	    __webpack_require__(7)($translateProvider);
 	}]);
 
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+	languages = [{
+	    "code": "ca",
+	    "name": "Catalan"
+	},
+	{
+	    "code": "es",
+	    "name": "Spanish"
+	},
+	{
+	    "code": "en",
+	    "name": "English"
+	},
+	{
+	    "code": "pt",
+	    "name": "Portuguese"
+	},
+	{
+	    "code": "it",
+	    "name": "Italian"
+	},
+	{
+	    "code": "fr",
+	    "name": "French"
+	},
+	{
+	    "code": "de",
+	    "name": "German"
+	},
+	{
+	    "code": "ru",
+	    "name": "Russian"
+	},
+	{
+	    "code": "ja",
+	    "name": "Japanese"
+	},
+	{
+	    "code": "zh",
+	    "name": "Chinese"
+	}];
+
+	module.exports = languages;
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
 	module.exports = function (nga, admin) {
@@ -107,7 +154,7 @@
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports) {
 
 	module.exports = function (nga, admin) {
@@ -120,7 +167,7 @@
 			answers.listView()
 			.title('Answers')
 			.fields([
-				nga.field('question', 'reference')
+				nga.field('quest', 'reference').label('Question')
 				.targetEntity(questions)
 				.targetField(nga.field('id_fura'))
 				.isDetailLink(true),
@@ -133,13 +180,13 @@
 			.exportFields([])
 			.listActions(['show'])
 			.filters([
-				nga.field('question'),		
+				nga.field('quest').label('Question'),		
 			]);
 
 			answers.showView()
 			.title('Answers')
 			.fields([
-				nga.field('question', 'reference')
+				nga.field('quest', 'reference').label('Question')
 				.targetEntity(questions)
 				.targetField(nga.field('id_fura'))
 				.isDetailLink(true),
@@ -153,8 +200,11 @@
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports) {
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var languages = __webpack_require__(1);
+	languages = languages.map((lang)=>{return {label: lang.name, value: lang.code}});
 
 	module.exports = function (nga, admin) {
 
@@ -167,16 +217,15 @@
 			.fields([
 				nga.field('form').label('Form').isDetailLink(true),
 				nga.field('id_fura').label("ID").isDetailLink(true),
-				nga.field('group').label('Group').isDetailLink(true),
 				nga.field('text').label('Question'),
+	            // nga.field('timer').label('Timer'),
 				nga.field('date', 'date').label('Created').format('dd/MM/yyyy')
 			])
 			.sortField('id_fura')
 			.sortDir('ASC')
 			.listActions(['show'])
 			.filters([
-				nga.field('form'),
-				nga.field('group')
+				nga.field('form')
 			]);
 
 			questions.showView()
@@ -184,11 +233,20 @@
 			.fields([
 				nga.field('form').label('Form'),
 				nga.field('id_fura').label("ID"),
-				nga.field('group').label('Group'),
-				nga.field('text').label('Question'),
-				nga.field('opcions', 'embedded_list').label('Options')
+				nga.field('default').label('Default Language'),
+				nga.field('text', 'embedded_list').label('Question')
 				.targetFields([
-					nga.field('opt').label('Option')
+					nga.field('lang').label('Language'),
+					nga.field('text').label('Text')
+				]),
+				// nga.field('timer').label('Timer'),
+				nga.field('answers', 'embedded_list').label('Answers')
+				.targetFields([
+					nga.field('lang').label('Language'),
+					nga.field('values', 'embedded_list').label('Values')
+					.targetFields([
+						nga.field('value').label('Value')
+					])
 				]),
 				nga.field('date', 'date').label('Created').format('dd/MM/yyyy')
 			])
@@ -199,11 +257,20 @@
 			.fields([
 				nga.field('form').label('Form'),
 				nga.field('id_fura').label("ID"),
-				nga.field('group').label('Group'),
-				nga.field('text').label('Question'),
-				nga.field('opcions', 'embedded_list').label('Options')
+				nga.field('default', 'choice').label('Default Language').choices(languages),
+				nga.field('text', 'embedded_list').label('Question')
 				.targetFields([
-					nga.field('opt').label('Option')
+					nga.field('lang', 'choice').label('Language').choices(languages),
+					nga.field('text').label('Text')
+				]),
+	            // nga.field('timer').label('Timer'),
+				nga.field('answers', 'embedded_list').label('Answers')
+				.targetFields([
+					nga.field('lang', 'choice').label('Language').choices(languages),
+					nga.field('values', 'embedded_list').label('Values')
+					.targetFields([
+						nga.field('value').label('Value')
+					])
 				])
 			]);
 
@@ -212,11 +279,20 @@
 			.fields([
 				nga.field('form').label('Form'),
 				nga.field('id_fura').label("ID"),
-				nga.field('group').label('Group'),
-				nga.field('text').label('Question'),
-				nga.field('opcions', 'embedded_list').label('Options')
+				nga.field('default', 'choice').label('Default Language').choices(languages),
+				nga.field('text', 'embedded_list').label('Question')
 				.targetFields([
-					nga.field('opt').label('Option')
+					nga.field('lang', 'choice').label('Language').choices(languages),
+					nga.field('text').label('Text')
+				]),
+				// nga.field('timer').label('Timer'),
+				nga.field('answers', 'embedded_list').label('Answers')
+				.targetFields([
+					nga.field('lang', 'choice').label('Language').choices(languages),
+					nga.field('values', 'embedded_list').label('Values')
+					.targetFields([
+						nga.field('value').label('Value')
+					])
 				])
 			]);
 
@@ -225,7 +301,7 @@
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
 	module.exports = ['$q', '$injector', 'notification', function($q, $injector, notification) {
@@ -256,7 +332,7 @@
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 	module.exports = '<div class="navbar-header">' +
@@ -270,7 +346,7 @@
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 	module.exports = function($translateProvider){
@@ -368,7 +444,7 @@
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 	module.exports = function(nga, admin) {

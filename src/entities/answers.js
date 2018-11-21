@@ -8,7 +8,7 @@ module.exports = function (nga, admin) {
 		answers.listView()
 		.title('Answers')
 		.fields([
-			nga.field('question', 'reference')
+			nga.field('quest', 'reference').label('Question')
 			.targetEntity(questions)
 			.targetField(nga.field('id_fura'))
 			.isDetailLink(true),
@@ -21,13 +21,13 @@ module.exports = function (nga, admin) {
 		.exportFields([])
 		.listActions(['show'])
 		.filters([
-			nga.field('question'),		
+			nga.field('quest').label('Question'),		
 		]);
 
 		answers.showView()
 		.title('Answers')
 		.fields([
-			nga.field('question', 'reference')
+			nga.field('quest', 'reference').label('Question')
 			.targetEntity(questions)
 			.targetField(nga.field('id_fura'))
 			.isDetailLink(true),

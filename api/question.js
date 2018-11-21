@@ -27,28 +27,64 @@ async function listQuestions(req, res, next){
 async function getQuestion(req, res, next){
 	var data = await Question.findById(req.params.id).lean().exec();
 	if(!data) return res.status(404).send('Not found');
-	data.opcions = data.options.map((option) => { return {opt: option}; });
+	data.text = JSON.parse(data.text);
+	data.answers = JSON.parse(data.answers);
+	console.log("GET DATA: ", data);
+	console.log("OPTIONS VALUES: ", data.answers[0].values);
+	
 	res.send(data);
 }
 
 async function updateQuestion(req, res, next){
-	if(req.body.id_fura){
-		var q = await Question.findOne({id_fura: req.body.id_fura}).lean().exec();
-		if(q && q._id != req.body._id) return res.status(500).send({error: 'id_fura already exists'});
-	}
-	if(req.body.id_fura && !req.body.id_fura.length) return res.status(500).send({error: "Camp id_fura can't be empty"});
-	if(req.body.text && !req.body.text.length) return res.status(500).send({error: "Camp text can't be empty"});
-	if(req.body.group && !req.body.group.length) return res.status(500).send({error: "Camp group can't be empty"});
-	if(req.body.opcions && !req.body.opcions.length) return res.status(500).send({error: "Camp options can't be empty"});
+	console.log("UPDATE BODY: ", req.body);
+	if(!req.body || !req.body.form || !req.body.form.length || !req.body.id_fura || !req.body.id_fura.length || !req.body.default || !req.body.text.length || !req.body.answers.length) return res.status(500).send({error: 'Missing parameters'});
+	
+	var q = await Question.findOne({id_fura: req.body.id_fura}).lean().exec();
+	if(q && q._id != req.body._id) return res.status(500).send({error: 'id_fura already exists'});
+	
+	//Check texts and values has same languages
+	if(req.body.text.length != req.body.answers.length) return res.status(500).send({error: 'Must have same languages'});
+	var textLanguages = req.body.text.map((text)=>{return text.lang;});
+	var optionLanguages = req.body.answers.map((option)=>{return option.lang;});
+	var sameLanguages = textLanguages.reduce((prev, curr)=>{return prev && optionLanguages.indexOf(curr) != -1;}, true);
+		
+	if(!sameLanguages) return res.status(500).send({error: 'Must have same languages'});
+
+	//Check texts and values don't have the same language twice
+	var repeatedLanguages = textLanguages.reduce((prev, curr)=>{ return prev || textLanguages.indexOf(curr) != textLanguages.lastIndexOf(curr)},false);
+	repeatedLanguages = optionLanguages.reduce((prev, curr)=>{ return prev || optionLanguages.indexOf(curr) != optionLanguages.lastIndexOf(curr)},repeatedLanguages);
+
+	if(repeatedLanguages) return res.status(500).send({error: "Can not have a language repeated twice or more"});
+
+	//Check answers have answers
+	var noOptions = req.body.answers.reduce((prev, curr)=>{ return prev || !curr.values.length;	}, false);
+	if(noOptions) return res.status(500).send({error: "All languages must have some values"});
+	
+	//Check answers have same length
+	var length = req.body.answers[0].values.length;
+	var diffLength = req.body.answers.reduce((prev, curr)=>{ return prev || curr.values.length != length; }, false);
+	if(diffLength) return res.status(500).send({error: "All languages must have same amount of answers"});
+
+	//Check empty strings
+	var emptyText = req.body.text.reduce((prev, curr)=>{return prev || !curr.text.length;}, false);
+	var allOptions = req.body.answers.reduce((prev, curr)=>{return prev.concat(curr.values)},[]);
+	var emptyOption = allOptions.reduce((prev, curr)=>{return prev || !curr.value.length;}, false);
+	if(emptyText || emptyOption) return res.status(500).send({error: "Text camps can't be empty"});
+
+	//Check default exists
+	if(textLanguages.indexOf(req.body.default) == -1) return res.status(500).send({error: "Default language must be within text and answers languages"});
 
 	var quest = Object.assign({}, req.body);
-	quest.options = quest.opcions.reduce((prev, curr)=>{
-		if(curr.opt === null || !curr.opt.length) return prev;
-		else prev.push(curr.opt.trim().replace(/\s\s+/g, ' '))
-		return prev;
-	}, []);
+	quest.answers = quest.answers.map((answer)=>{
+		answer.values = answer.values.map((val)=>{ 
+			val.value = val.value.trim().replace(/\s\s+/g, ' ');
+			return val;
+		});
+		return answer;
+	});
 
-	if(!quest.options.length) return res.status(500).send({error: 'options needed'});
+	quest.text =JSON.stringify(quest.text);
+	quest.answers =JSON.stringify(quest.answers);
 
 	const data = await Question.findByIdAndUpdate(req.params.id, quest).lean().exec();
 	if(!data) return res.status(404).send('Not found');
@@ -56,17 +92,55 @@ async function updateQuestion(req, res, next){
 }
 
 async function addQuestion(req, res, next) {
-	if(!req.body || !req.body.form || !req.body.id_fura || !req.body.group || !req.body.text || !req.body.opcions) return res.status(500).send({error: 'Missing parameters'});
+	if(!req.body || !req.body.form || !req.body.id_fura || !req.body.default || !req.body.text.length || !req.body.answers.length) return res.status(500).send({error: 'Missing parameters'});
+	
+	//Check id already exists
 	var count = await Question.find({id_fura: req.body.id_fura}).count().exec();
 	if(count > 0) return res.status(500).send({error: 'id_fura already exists'});
-	var quest = Object.assign({}, req.body);
-	quest.options = quest.opcions.reduce((prev, curr)=>{
-		if(curr.opt === null || !curr.opt.length) return prev;
-		else prev.push(curr.opt.trim().replace(/\s\s+/g, ' '))
-		return prev;
-	}, []);
+	
+	//Check texts and values has same languages
+	if(req.body.text.length != req.body.answers.length) return res.status(500).send({error: 'Must have same languages'});
+	var textLanguages = req.body.text.map((text)=>{return text.lang;});
+	var optionLanguages = req.body.answers.map((option)=>{return option.lang;});
+	var sameLanguages = textLanguages.reduce((prev, curr)=>{return prev && optionLanguages.indexOf(curr) != -1;}, true);
+		
+	if(!sameLanguages) return res.status(500).send({error: 'Must have same languages'});
 
-	if(!quest.options.length) return res.status(500).send({error: 'options needed'});
+	//Check texts and values don't have the same language twice
+	var repeatedLanguages = textLanguages.reduce((prev, curr)=>{ return prev || textLanguages.indexOf(curr) != textLanguages.lastIndexOf(curr)},false);
+	repeatedLanguages = optionLanguages.reduce((prev, curr)=>{ return prev || optionLanguages.indexOf(curr) != optionLanguages.lastIndexOf(curr)},repeatedLanguages);
+
+	if(repeatedLanguages) return res.status(500).send({error: "Can not have a language repeated twice or more"});
+
+	//Check answers have answers
+	var noOptions = req.body.answers.reduce((prev, curr)=>{ return prev || !curr.values.length;	}, false);
+	if(noOptions) return res.status(500).send({error: "All languages must have some values"});
+	
+	//Check answers have same length
+	var length = req.body.answers[0].values.length;
+	var diffLength = req.body.answers.reduce((prev, curr)=>{ return prev || curr.values.length != length; }, false);
+	if(diffLength) return res.status(500).send({error: "All languages must have same amount of answers"});
+
+	//Check empty strings
+	var emptyText = req.body.text.reduce((prev, curr)=>{return prev || !curr.text.length;}, false);
+	var allOptions = req.body.answers.reduce((prev, curr)=>{return prev.concat(curr.values)},[]);
+	var emptyOption = allOptions.reduce((prev, curr)=>{return prev || !curr.value.length;}, false);
+	if(emptyText || emptyOption) return res.status(500).send({error: "Text camps can't be empty"});
+
+	//Check default exists
+	if(textLanguages.indexOf(req.body.default) == -1) return res.status(500).send({error: "Default language must be within text and answers languages"});
+
+	var quest = Object.assign({}, req.body);
+	quest.answers = quest.answers.map((answer)=>{
+		answer.values = answer.values.map((val)=>{ 
+			val.value = val.value.trim().replace(/\s\s+/g, ' ');
+			return val;
+		});
+		return answer;
+	});
+
+	quest.text =JSON.stringify(quest.text);
+	quest.answers =JSON.stringify(quest.answers);
 
 	const data = await Question.create(quest);
 	res.send(data);
