@@ -13,7 +13,7 @@ module.exports = function (nga, admin) {
 			nga.field('form').label('Form').isDetailLink(true),
 			nga.field('id_fura').label("ID").isDetailLink(true),
 			nga.field('timer', 'number').label("Timer (seconds)").format('0,0.00'),
-			nga.field('default').label('Default Language'),
+			nga.field('default', 'choice').label('Default Language').choices(languages),
 			nga.field('text').label('Question'),
 			nga.field('date', 'date').label('Created').format('dd/MM/yyyy')
 		])
@@ -30,16 +30,15 @@ module.exports = function (nga, admin) {
 			nga.field('form').label('Form'),
 			nga.field('id_fura').label("ID"),
 			nga.field('timer', 'number').label("Timer (seconds)").format('0,0.00'),
-			nga.field('default').label('Default Language'),
+			nga.field('default', 'choice').label('Default Language').choices(languages),
 			nga.field('text', 'embedded_list').label('Question')
 			.targetFields([
-				nga.field('lang').label('Language'),
+				nga.field('lang', 'choice').label('Language').choices(languages),
 				nga.field('text').label('Text')
 			]),
-			// nga.field('timer').label('Timer'),
 			nga.field('answers', 'embedded_list').label('Answers')
 			.targetFields([
-				nga.field('lang').label('Language'),
+				nga.field('lang', 'choice').label('Language').choices(languages),
 				nga.field('values', 'embedded_list').label('Values')
 				.targetFields([
 					nga.field('value').label('Value')

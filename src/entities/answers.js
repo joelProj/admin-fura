@@ -21,7 +21,7 @@ module.exports = function (nga, admin) {
 		.exportFields([])
 		.listActions(['show'])
 		.filters([
-			nga.field('quest').label('Question'),		
+			nga.field('id_fura').label('Question')
 		]);
 
 		answers.showView()
