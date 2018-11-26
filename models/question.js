@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.model('Question', mongoose.Schema({
 
-    form: { type: String, required: true },
+    form: { type: ObjectId, ref: 'Form', required: true },
     id_fura: { type: String, required: true },
     default: { type: String, required: true },
     text: { type: String, required: true },
