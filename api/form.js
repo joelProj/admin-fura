@@ -40,6 +40,7 @@ async function updateForm(req, res, next){
 	if(firstForm && firstForm._id != req.body._id) return res.status(500).send({error: 'name already exists'});
 
 	const data = await Form.findByIdAndUpdate(req.body._id, req.body);
+
 	res.send(data);
 }
 
@@ -51,6 +52,7 @@ async function addForm(req, res, next) {
 	if(count > 0) return res.status(500).send({error: 'name already exists'});
 
 	const data = await Form.create(req.body);
+
 	res.send(data);
 }
 
@@ -69,7 +71,8 @@ async function removeForm(req, res, next){
             await Question.findByIdAndRemove(deleteQuestions[i]._id).exec();
         }
         
-        await Form.findByIdAndRemove(req.params.id).exec();
+		await Form.findByIdAndRemove(req.params.id).exec();
+
         res.send({});
 }
 

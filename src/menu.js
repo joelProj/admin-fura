@@ -8,7 +8,7 @@ module.exports = function(nga, admin) {
 				
 				.addChild(nga.menu(admin.getEntity('forms'))
 						.active(function(path){return path.indexOf('/forms') === 0})
-						.icon('<span class="fas fa-file-signature"></span>')
+						.icon('<span class="fa fa-book"></span>')
 						.title('Forms')
 				)
 				.addChild(nga.menu(admin.getEntity('questions'))
