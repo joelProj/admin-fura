@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 // API ROUTINES
+var formRouter = require('./form');
 var questionRouter = require('./question');
 var answerRouter = require('./answer');
 
@@ -12,6 +13,7 @@ var router = express.Router();
 router.use('/api', bodyParser.json({limit: '10mb'}));
 
 // ROUTES
+router.use('/api', formRouter);
 router.use('/api', questionRouter);
 router.use('/api', answerRouter);
 

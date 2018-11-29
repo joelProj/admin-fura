@@ -51,7 +51,7 @@
 
 	var crmApp = angular.module('admin', ['ng-admin']);
 
-	crmApp.factory('httpInterceptor', __webpack_require__(5));
+	crmApp.factory('httpInterceptor', __webpack_require__(6));
 
 	crmApp.config(['NgAdminConfigurationProvider', '$stateProvider', '$translateProvider', '$httpProvider', function(NgAdminConfigurationProvider, $stateProvider, $translateProvider, $httpProvider) {
 
@@ -64,10 +64,12 @@
 
 	    // ENTITIES
 
+	    admin.addEntity(nga.entity('forms'));
 	    admin.addEntity(nga.entity('questions'));
 	    admin.addEntity(nga.entity('answers'));
 
 	    __webpack_require__(4)(nga, admin);
+	    __webpack_require__(5)(nga, admin);
 	    __webpack_require__(3)(nga, admin);
 
 	    // PAGES
@@ -75,15 +77,15 @@
 
 
 	    admin.dashboard(__webpack_require__(2)(nga, admin));
-	    admin.header(__webpack_require__(6));
-	    admin.menu(__webpack_require__(8)(nga, admin));
+	    admin.header(__webpack_require__(7));
+	    admin.menu(__webpack_require__(9)(nga, admin));
 
 
 	    // CONFIG
 	    nga.configure(admin);
 
 	    // LANGUAGE
-	    __webpack_require__(7)($translateProvider);
+	    __webpack_require__(8)($translateProvider);
 	}]);
 
 
@@ -208,6 +210,67 @@
 
 	module.exports = function (nga, admin) {
 
+			var forms = admin.getEntity('forms');
+			var questions = admin.getEntity('questions');
+
+			forms.identifier(nga.field('_id'));
+
+			forms.listView()
+			.title('Forms')
+			.fields([
+				nga.field('name').label('Form').isDetailLink(true),
+				nga.field('date', 'date').label('Created').format('dd/MM/yyyy')
+			])
+			.sortField('name')
+			.sortDir('ASC')
+			.listActions(['show']);
+
+			forms.showView()
+			.title('Form')
+			.fields([
+				nga.field('name').label('Form').isDetailLink(true),
+				nga.field('date', 'date').label('Created').format('dd/MM/yyyy'),
+				nga.field('questions', 'referenced_list') // Define a 1-N relationship with the comment entity
+					.targetEntity(questions) // Target the comment Entity
+					.targetReferenceField('form') // Each comment with post_id = post.id (the identifier) will be displayed
+					.targetFields([ // which comment fields to display in the datagrid
+						nga.field('id_fura').label("ID").isDetailLink(true),
+						nga.field('timer', 'number').label("Timer (seconds)").format('0,0.00'),
+						nga.field('default', 'choice').label('Default Language').choices(languages),
+						nga.field('text').label('Question'),
+						nga.field('date', 'date').label('Created').format('dd/MM/yyyy')
+					])
+			])
+			.actions(['edit']);
+
+			forms.editionView()
+			.title('Form')
+			.fields([
+	                        nga.field('name').label('Form').isDetailLink(true)
+			]);
+
+			forms.creationView()
+			.title('Form')
+			.fields([
+	                        nga.field('name').label('Form').isDetailLink(true)
+			]);
+
+			return forms;
+	};
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var languages = __webpack_require__(1);
+	languages = languages.map((lang)=>{return {label: lang.name, value: lang.code}});
+
+	// var utils = require('../../lib/utils');
+	// var forms = utils.getFormList();
+
+	module.exports = function (nga, admin) {
+
 			var questions = admin.getEntity('questions');
 
 			questions.identifier(nga.field('_id'));
@@ -265,7 +328,6 @@
 					nga.field('lang', 'choice').label('Language').choices(languages),
 					nga.field('text').label('Text')
 				]),
-	            // nga.field('timer').label('Timer'),
 				nga.field('answers', 'embedded_list').label('Answers')
 				.targetFields([
 					nga.field('lang', 'choice').label('Language').choices(languages),
@@ -288,7 +350,6 @@
 					nga.field('lang', 'choice').label('Language').choices(languages),
 					nga.field('text').label('Text')
 				]),
-				// nga.field('timer').label('Timer'),
 				nga.field('answers', 'embedded_list').label('Answers')
 				.targetFields([
 					nga.field('lang', 'choice').label('Language').choices(languages),
@@ -304,7 +365,7 @@
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 	module.exports = ['$q', '$injector', 'notification', function($q, $injector, notification) {
@@ -335,7 +396,7 @@
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 	module.exports = '<div class="navbar-header">' +
@@ -349,7 +410,7 @@
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 	module.exports = function($translateProvider){
@@ -447,7 +508,7 @@
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 	module.exports = function(nga, admin) {
@@ -457,6 +518,12 @@
 					// 		.title('Summary')
 					// 		.link('/summary')
 					// )
+					
+					.addChild(nga.menu(admin.getEntity('forms'))
+							.active(function(path){return path.indexOf('/forms') === 0})
+							.icon('<span class="fas fa-file-signature"></span>')
+							.title('Forms')
+					)
 					.addChild(nga.menu(admin.getEntity('questions'))
 							.active(function(path){return path.indexOf('/questions') === 0})
 							.icon('<span class="fa fa-question-circle fa-fw"></span>')

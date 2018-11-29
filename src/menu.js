@@ -5,6 +5,12 @@ module.exports = function(nga, admin) {
 				// 		.title('Summary')
 				// 		.link('/summary')
 				// )
+				
+				.addChild(nga.menu(admin.getEntity('forms'))
+						.active(function(path){return path.indexOf('/forms') === 0})
+						.icon('<span class="fas fa-file-signature"></span>')
+						.title('Forms')
+				)
 				.addChild(nga.menu(admin.getEntity('questions'))
 						.active(function(path){return path.indexOf('/questions') === 0})
 						.icon('<span class="fa fa-question-circle fa-fw"></span>')

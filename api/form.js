@@ -37,9 +37,9 @@ async function updateForm(req, res, next){
 	
 	//Check id already exists
 	var firstForm = await Form.findOne({name: req.body.name}).lean().exec();
-	if(firstForm._id != req.body._id) return res.status(500).send({error: 'name already exists'});
+	if(firstForm && firstForm._id != req.body._id) return res.status(500).send({error: 'name already exists'});
 
-	const data = await Form.create(req.body);
+	const data = await Form.findByIdAndUpdate(req.body._id, req.body);
 	res.send(data);
 }
 
@@ -74,3 +74,4 @@ async function removeForm(req, res, next){
 }
 
 module.exports = router;
+

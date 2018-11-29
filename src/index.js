@@ -18,9 +18,11 @@ crmApp.config(['NgAdminConfigurationProvider', '$stateProvider', '$translateProv
 
     // ENTITIES
 
+    admin.addEntity(nga.entity('forms'));
     admin.addEntity(nga.entity('questions'));
     admin.addEntity(nga.entity('answers'));
 
+    require('./entities/forms')(nga, admin);
     require('./entities/questions')(nga, admin);
     require('./entities/answers')(nga, admin);
 

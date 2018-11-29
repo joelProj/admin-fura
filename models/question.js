@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'),
+    ObjectId = mongoose.Schema.ObjectId;
 
 const Schema = mongoose.model('Question', mongoose.Schema({
 

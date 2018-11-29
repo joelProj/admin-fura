@@ -1,6 +1,9 @@
 var languages = require('../../lib/language');
 languages = languages.map((lang)=>{return {label: lang.name, value: lang.code}});
 
+// var utils = require('../../lib/utils');
+// var forms = utils.getFormList();
+
 module.exports = function (nga, admin) {
 
 		var questions = admin.getEntity('questions');
@@ -60,7 +63,6 @@ module.exports = function (nga, admin) {
 				nga.field('lang', 'choice').label('Language').choices(languages),
 				nga.field('text').label('Text')
 			]),
-            // nga.field('timer').label('Timer'),
 			nga.field('answers', 'embedded_list').label('Answers')
 			.targetFields([
 				nga.field('lang', 'choice').label('Language').choices(languages),
@@ -83,7 +85,6 @@ module.exports = function (nga, admin) {
 				nga.field('lang', 'choice').label('Language').choices(languages),
 				nga.field('text').label('Text')
 			]),
-			// nga.field('timer').label('Timer'),
 			nga.field('answers', 'embedded_list').label('Answers')
 			.targetFields([
 				nga.field('lang', 'choice').label('Language').choices(languages),
