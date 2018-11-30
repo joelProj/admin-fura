@@ -3,9 +3,10 @@ const mongoose = require('mongoose'),
 
 const Schema = mongoose.model('Answer', mongoose.Schema({
     
-    //deviceId: { type: String, required: true },
+    uuid: { type: String, required: true },
+    userCode: { type: String, default: "" },
     quest: { type: ObjectId, ref: 'Question', required: true },
-    group: { type: String, required: true },
+    group: { type: String, default: "" },
     value: { type: String, required: true },
     date: { type: Date, default: Date.now }
 

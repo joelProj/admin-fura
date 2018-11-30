@@ -12,6 +12,7 @@ module.exports = function (nga, admin) {
 			.targetEntity(questions)
 			.targetField(nga.field('id_fura'))
 			.isDetailLink(true),
+			nga.field('userCode').label("User Code").isDetailLink(true),
 			nga.field('group').isDetailLink(true),
 			nga.field('value').isDetailLink(true),
 			nga.field('date', 'date').format('dd/MM/yyyy HH:mm'),
@@ -21,7 +22,8 @@ module.exports = function (nga, admin) {
 		.exportFields([])
 		.listActions(['show'])
 		.filters([
-			nga.field('id_fura').label('Question')
+			nga.field('id_fura').label('Question'),
+			nga.field('userCode').label('User')
 		]);
 
 		answers.showView()
@@ -31,6 +33,7 @@ module.exports = function (nga, admin) {
 			.targetEntity(questions)
 			.targetField(nga.field('id_fura'))
 			.isDetailLink(true),
+			nga.field('userCode').label("User Code"),
 			nga.field('group'),
 			nga.field('value'),
 			nga.field('date', 'date').format('dd/MM/yyyy HH:mm'),
