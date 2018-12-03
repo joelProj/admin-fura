@@ -4,6 +4,7 @@
   "description": "Admin questionaris per La Fura dels Baus",
   "main": "server.js",
   "scripts": {
+    "build": "make build",
     "start": "make run",
     "prepublish": "make snyk-protect"
   },
