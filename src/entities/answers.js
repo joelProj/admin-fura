@@ -23,7 +23,8 @@ module.exports = function (nga, admin) {
 		.listActions(['show'])
 		.filters([
 			nga.field('id_fura').label('Question'),
-			nga.field('userCode').label('User')
+			nga.field('userCode').label('User'),
+			nga.field('group').label('Group'),
 		]);
 
 		answers.showView()

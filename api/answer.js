@@ -13,23 +13,30 @@ router.get('/answers', listAnswers);
 async function listAnswers(req, res, next){
 	const perPage = parseInt(req.query._perPage);
 	const start = (parseInt(req.query._page) - 1) * perPage;
-	const sortBy = (req.query._sortDir == 'ASC' ? '' : '-') + req.query._sortField;
+	const sortBy = (req.query._sortDir == 'ASC' ? '' : '-') + req.query._sortField;	
 
 
-
+	var answers;
 	if(req.query._filters){
-		const validId = await Question.findOne(JSON.parse(req.query._filters || '{}')).select('_id').lean().exec();
+		let filters = JSON.parse(req.query._filters || '{}');
+		let validID;
+		if(filters.id_fura){
+			validID = await Question.findOne({id_fura: filters.id_fura}).select('_id').lean().exec();
 
-		const count = await Answer.count({quest: validId}).exec();
+			if(validID)filters.quest = validID._id;
+			delete filters.id_fura
+		}
+
+		const count = await Answer.count(filters).exec();
 		res.set("X-Total-Count", count);
 	
-		var answers = await Answer.find({quest: validId}).sort(sortBy).skip(start).limit(perPage).lean().exec();
+		answers = await Answer.find(filters).sort(sortBy).skip(start).limit(perPage).lean().exec();
 	}
 	else{
 		const count = await Answer.count({}).exec();
 		res.set("X-Total-Count", count);
 	
-		var answers = await Answer.find({}).sort(sortBy).skip(start).limit(perPage).lean().exec();
+		answers = await Answer.find({}).sort(sortBy).skip(start).limit(perPage).lean().exec();
 	}
 
 	res.send(answers);

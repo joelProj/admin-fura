@@ -26,7 +26,7 @@ module.exports = function (nga, admin) {
 		.sortDir('ASC')
 		.listActions(['show'])
 		.filters([
-			nga.field('form')
+			nga.field('name').label("Form")
 		]);
 
 		questions.showView()

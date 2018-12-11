@@ -4,9 +4,9 @@ const mongoose = require('mongoose'),
 const Schema = mongoose.model('Answer', mongoose.Schema({
     
     uuid: { type: String, required: true },
-    userCode: { type: String, default: "" },
+    userCode: { type: String, default: "-" },
     quest: { type: ObjectId, ref: 'Question', required: true },
-    group: { type: String, default: "" },
+    group: { type: String, default: "-" },
     value: { type: String, required: true },
     date: { type: Date, default: Date.now }
 

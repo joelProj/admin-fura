@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // DB
+const Form = require('../models/form.js');
 const Question = require('../models/question.js');
 const Answer = require('../models/answer.js');
 
@@ -17,19 +18,40 @@ async function listQuestions(req, res, next){
 	const start = (parseInt(req.query._page) - 1) * perPage;
 	const sortBy = (req.query._sortDir == 'ASC' ? '' : '-') + req.query._sortField;
 
-	const count = await Question.count(JSON.parse(req.query._filters || '{}')).exec();
-	res.set("X-Total-Count", count);
+	var questions;
 
-	const questions = await Question.find(JSON.parse(req.query._filters || '{}')).sort(sortBy).skip(start).limit(perPage).lean().exec();
-	questions.map((quest)=>{
-		var def = quest.default;
-		quest.text = JSON.parse(quest.text);
-		quest.text = quest.text.reduce((prev,curr)=>{
-			if(curr.lang == def) return curr.text;
-			return prev;
-		},'');
-		return quest;
-	})
+	if(req.query._filters){
+		const validID = await Form.findOne(JSON.parse(req.query._filters)).select('_id').lean().exec();
+
+		const count = await Question.count({form: validID._id}).exec();
+		res.set("X-Total-Count", count);
+	
+		questions = await Question.find({form: validID._id}).sort(sortBy).skip(start).limit(perPage).lean().exec();
+		questions.map((quest)=>{
+			var def = quest.default;
+			quest.text = JSON.parse(quest.text);
+			quest.text = quest.text.reduce((prev,curr)=>{
+				if(curr.lang == def) return curr.text;
+				return prev;
+			},'');
+			return quest;
+		})
+	}
+	else{
+		const count = await Question.count({}).exec();
+		res.set("X-Total-Count", count);
+	
+		questions = await Question.find({}).sort(sortBy).skip(start).limit(perPage).lean().exec();
+		questions.map((quest)=>{
+			var def = quest.default;
+			quest.text = JSON.parse(quest.text);
+			quest.text = quest.text.reduce((prev,curr)=>{
+				if(curr.lang == def) return curr.text;
+				return prev;
+			},'');
+			return quest;
+		})
+	}
 	res.send(questions);
 }
 
