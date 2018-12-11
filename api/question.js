@@ -23,19 +23,24 @@ async function listQuestions(req, res, next){
 	if(req.query._filters){
 		const validID = await Form.findOne(JSON.parse(req.query._filters)).select('_id').lean().exec();
 
-		const count = await Question.count({form: validID._id}).exec();
-		res.set("X-Total-Count", count);
-	
-		questions = await Question.find({form: validID._id}).sort(sortBy).skip(start).limit(perPage).lean().exec();
-		questions.map((quest)=>{
-			var def = quest.default;
-			quest.text = JSON.parse(quest.text);
-			quest.text = quest.text.reduce((prev,curr)=>{
-				if(curr.lang == def) return curr.text;
-				return prev;
-			},'');
-			return quest;
-		})
+		if(validID){
+			const count = await Question.count({form: validID._id}).exec();
+			res.set("X-Total-Count", count);
+		
+			questions = await Question.find({form: validID._id}).sort(sortBy).skip(start).limit(perPage).lean().exec();
+			questions.map((quest)=>{
+				var def = quest.default;
+				quest.text = JSON.parse(quest.text);
+				quest.text = quest.text.reduce((prev,curr)=>{
+					if(curr.lang == def) return curr.text;
+					return prev;
+				},'');
+				return quest;
+			});
+		}
+		else{
+			questions = [];
+		}
 	}
 	else{
 		const count = await Question.count({}).exec();
