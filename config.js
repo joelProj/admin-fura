@@ -25,7 +25,7 @@ var defaults = {
     ADMIN_HTTP_PASSWORD: null,
 
     // DATABASE
-    ADMIN_MONGODB_URI: 'mongodb://localhost:27017/DB-fura',
+    ADMIN_MONGODB_URI: 'mongodb://mongo:27017/DB-fura',
 
     // CERTBOT
     ADMIN_ALLOW_CERTBOT: true,
