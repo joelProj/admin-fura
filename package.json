@@ -39,7 +39,7 @@
     "ng-admin": "1.0.0-alpha2",
     "snyk": "^1.18.1",
     "style-loader": "^0.13.1",
-    "validator": "^6.0.0",
+    "validator": "^13.7.0",
     "webpack": "^1.13.2"
   },
   "devDependencies": {
