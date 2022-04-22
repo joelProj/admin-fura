@@ -35,7 +35,7 @@
     "lodash.throttle": "^4.1.1",
     "method-override": "^2.3.6",
     "mongoose": "^4.4.17",
-    "nconf": "^0.8.4",
+    "nconf": "^0.11.4",
     "ng-admin": "1.0.0-alpha2",
     "snyk": "^1.18.1",
     "style-loader": "^0.13.1",
