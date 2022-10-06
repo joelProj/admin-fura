@@ -37,7 +37,7 @@
     "mongoose": "^4.4.17",
     "nconf": "^0.8.4",
     "ng-admin": "1.0.0-alpha2",
-    "snyk": "^1.18.1",
+    "snyk": "^1.996.0",
     "style-loader": "^0.13.1",
     "validator": "^6.0.0",
     "webpack": "^1.13.2"
