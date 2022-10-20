@@ -34,7 +34,7 @@
     "express": "^4.13.4",
     "lodash.throttle": "^4.1.1",
     "method-override": "^2.3.6",
-    "mongoose": "^4.4.17",
+    "mongoose": "^4.13.21",
     "nconf": "^0.8.4",
     "ng-admin": "1.0.0-alpha2",
     "snyk": "^1.18.1",
